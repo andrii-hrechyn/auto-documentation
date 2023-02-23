@@ -1,0 +1,53 @@
+{
+    "name": "andrii-hrechyn/auto-documentation",
+    "description": "Auto documentation for laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "role": "Developer",
+            "name": "Andriy Hrechyn",
+            "email": "andriy.hrechyn@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "AutoDocumentation\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AutoDocumentation\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.1"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^1.22",
+        "pestphp/pest-plugin-laravel": "^1.4",
+        "pestphp/pest-plugin-mock": "^1.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AutoDocumentation\\PackageServiceProvider"
+            ],
+            "aliases": [
+                "JustSteveKing\\DataObjects\\Facades\\Hydrator"
+            ]
+        }
+    }
+}
