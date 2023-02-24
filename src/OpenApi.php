@@ -2,7 +2,7 @@
 
 namespace AutoDocumentation;
 
-use AutoDocumentation\Paths\Path;
+use AutoDocumentation\Paths\BasePath;
 use AutoDocumentation\SecuritySchemes\SecurityScheme;
 use AutoDocumentation\Traits\PathResolver;
 use Illuminate\Filesystem\Filesystem;
@@ -56,7 +56,7 @@ class OpenApi
         return $this->securitySchemes;
     }
 
-    public function registryPath(Path $path): Path
+    public function registryPath(BasePath $path): BasePath
     {
         $this->paths[] = $path;
 

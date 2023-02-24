@@ -3,7 +3,7 @@
 namespace AutoDocumentation\Traits;
 
 use AutoDocumentation\Contracts\Resolvable;
-use AutoDocumentation\Paths\Path;
+use AutoDocumentation\Paths\BasePath;
 
 trait PathResolver
 {
@@ -11,7 +11,7 @@ trait PathResolver
     {
         $resolvedPaths = [];
 
-        /** @var Path $path */
+        /** @var BasePath $path */
         foreach ($paths as $path) {
             $resolvedPaths[$path->path][$path->method] = $this->resolvePath($path);
         }
@@ -19,7 +19,7 @@ trait PathResolver
         return $resolvedPaths;
     }
 
-    private function resolvePath(Path $path): array
+    private function resolvePath(BasePath $path): array
     {
         $parameters = $path->getParameters()->map(fn(Resolvable $resolvable) => $resolvable->resolve());
         $responses = $path->getResponses()->mapWithKeys(fn(Resolvable $resolvable) => $resolvable->resolve());
@@ -34,7 +34,7 @@ trait PathResolver
         ];
     }
 
-    private function requestBody(Path $path): array
+    private function requestBody(BasePath $path): array
     {
         if (!$path->getRequestBody()) {
             return [];
@@ -45,7 +45,7 @@ trait PathResolver
         ];
     }
 
-    private function security(Path $path): array
+    private function security(BasePath $path): array
     {
         if (!$path->getSecurity()) {
             return [];

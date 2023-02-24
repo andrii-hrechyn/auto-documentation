@@ -2,8 +2,8 @@
 
 namespace AutoDocumentation\Paths;
 
-use AutoDocumentation\Container;
 use AutoDocumentation\Exceptions\RouteNotFoundException;
+use AutoDocumentation\OpenApi;
 use AutoDocumentation\Schemas\ObjectSchema;
 use AutoDocumentation\Traits\RulesToPropertiesTrait;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class Route extends BasePath
             throw new RouteNotFoundException($name);
         }
 
-        return Container::$paths[] = new static(Str::lower($route->methods[0]), $route->uri, $summary, $route);
+        return OpenApi::instance()->registryPath(new static(Str::lower($route->methods[0]), $route->uri, $summary, $route));
     }
 
     public function requestBodyFromRequestClass(): static
