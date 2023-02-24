@@ -36,19 +36,25 @@ class OpenApi
         return self::$instance = new self();
     }
 
-    public function registerInfo(Info $info): void
+    public function registerInfo(Info $info): Info
     {
         $this->info = $info;
+
+        return $info;
     }
 
-    public function registerServer(Server $server): void
+    public function registerServer(Server $server): Server
     {
         $this->servers[] = $server;
+
+        return $server;
     }
 
-    public function registerSecuritySchemes(SecurityScheme $securityScheme): void
+    public function registerSecuritySchemes(SecurityScheme $securityScheme): SecurityScheme
     {
         $this->securitySchemes = $securityScheme;
+
+        return $securityScheme;
     }
 
     public function defaultSecurityScheme(): SecurityScheme
@@ -61,11 +67,6 @@ class OpenApi
         $this->paths[] = $path;
 
         return $path;
-    }
-
-    public function setPaths(array $paths): void
-    {
-        $this->paths = $paths;
     }
 
     public function generate(): array

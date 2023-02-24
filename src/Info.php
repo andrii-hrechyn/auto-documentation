@@ -8,14 +8,13 @@ class Info
 
     public static function make(string $title, string $version): self
     {
-        return new self($title, $version);
+        return OpenApi::instance()->registerInfo(new self($title, $version));
     }
 
     private function __construct(
         protected readonly string $title,
         protected readonly string $version
     ) {
-        OpenApi::instance()->registerInfo($this);
     }
 
     public function description(string $description): self

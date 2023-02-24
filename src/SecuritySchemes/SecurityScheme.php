@@ -10,12 +10,16 @@ class SecurityScheme
     protected string $bearerFormat = '';
     protected string $description = '';
 
+    public static function make(string $name, string $type, string $in): self
+    {
+        return OpenApi::instance()->registerSecuritySchemes(new self($name, $type, $in));
+    }
+
     private function __construct(
         public readonly string $name,
         public readonly string $type,
         public readonly string $in
     ) {
-       OpenApi::instance()->registerSecuritySchemes($this);
     }
 
     public function scheme(string $scheme): self
@@ -50,10 +54,5 @@ class SecurityScheme
                 'bearerFormat' => $this->bearerFormat,
             ],
         ];
-    }
-
-    public static function make(string $name, string $type, string $in): self
-    {
-        return new self($name, $type, $in);
     }
 }
