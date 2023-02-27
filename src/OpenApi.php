@@ -4,13 +4,14 @@ namespace AutoDocumentation;
 
 use AutoDocumentation\Paths\BasePath;
 use AutoDocumentation\SecuritySchemes\SecurityScheme;
+use AutoDocumentation\Traits\ComponentResolver;
 use AutoDocumentation\Traits\PathResolver;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 class OpenApi
 {
-    use PathResolver, GroupsAggregator;
+    use PathResolver, ComponentResolver, GroupsAggregator;
 
     const OPEN_API_VERSION = '3.1.0';
 
@@ -78,7 +79,7 @@ class OpenApi
             'servers'     => $this->prepareServers($this->servers),
             'paths'       => $this->resolvePaths($this->paths),
             'components'  => [
-                ...ComponentsRegistry::all(),
+                ...$this->resolveComponents(ComponentsRegistry::all()),
                 'securitySchemes' => $this->securitySchemes?->resolve(),
             ],
         ];

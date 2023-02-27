@@ -5,7 +5,7 @@ namespace AutoDocumentation\Console\Commands;
 use AutoDocumentation\Documentation;
 use Illuminate\Console\Command;
 
-class Generate extends Command
+class GenerateDocumentation extends Command
 {
     /**
      * The name and signature of the console command.

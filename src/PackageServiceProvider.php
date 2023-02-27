@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace AutoDocumentation;
 
-use AutoDocumentation\Console\Commands\Generate;
+use AutoDocumentation\Console\Commands\GenerateDocumentation;
+use AutoDocumentation\Console\Commands\Install;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,12 +25,9 @@ final class PackageServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands([
-            Generate::class,
+            Install::class,
+            GenerateDocumentation::class,
         ]);
-
-        $this->app->singleton(OpenApi::class, function () {
-            return new OpenApi();
-        });
     }
 
     protected function registerRoutes()

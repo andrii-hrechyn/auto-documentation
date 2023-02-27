@@ -10,6 +10,6 @@ return [
 
     'paths' => [
         'source' => base_path(env('AUTO_DOCUMENTATION_SOURCE', 'docs')),
-        'generated-doc' => storage_path('auto-docs')
+        'generated-doc' => storage_path('app/auto-docs')
     ]
 ];
