@@ -11,7 +11,7 @@ class ComponentsRegistry
 
     public static function set(Component $component): void
     {
-        self::$components[$component->type()->name][$component->name()] = $component;
+        self::$components[$component->type()->name][$component->name()] = $component->content()->resolve();
     }
 
     public static function get(ComponentType $type, string $name): ?Component

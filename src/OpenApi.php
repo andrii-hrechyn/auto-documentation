@@ -79,7 +79,7 @@ class OpenApi
             'servers'     => $this->prepareServers($this->servers),
             'paths'       => $this->resolvePaths($this->paths),
             'components'  => [
-                ...$this->resolveComponents(ComponentsRegistry::all()),
+                ...ComponentsRegistry::all(),
                 'securitySchemes' => $this->securitySchemes?->resolve(),
             ],
         ];
