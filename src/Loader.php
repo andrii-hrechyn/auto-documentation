@@ -37,7 +37,7 @@ class Loader
 
     private function loadPaths(string $path): void
     {
-        foreach ($this->filesystem->allFiles($path.'/paths') as $file) {
+        foreach ($this->filesystem->allFiles($path.'/Paths') as $file) {
             require $file->getPathname();
         }
     }
