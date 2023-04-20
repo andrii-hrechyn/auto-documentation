@@ -20,7 +20,7 @@ trait GroupsAggregator
             ->map(function (array $tags, string $name) {
                 return [
                     'name' => ucfirst($name),
-                    'tags' => array_map(fn(string $tag) => ucfirst($tag), array_unique(Arr::collapse($tags))),
+                    'tags' => array_map(fn(string $tag) => ucfirst($tag), array_values(array_unique(Arr::collapse($tags)))),
                 ];
             })
             ->values()
