@@ -5,6 +5,7 @@ namespace AutoDocumentation\Paths;
 use AutoDocumentation\Components\SchemaComponent;
 use AutoDocumentation\OpenApi;
 use AutoDocumentation\RequestBodies\MediaTypes\ApplicationJson;
+use AutoDocumentation\RequestBodies\MediaTypes\MultipartFormData;
 use AutoDocumentation\RequestBodies\RequestBody;
 use AutoDocumentation\Responses\SuccessfulResponse;
 use AutoDocumentation\Schemas\Schema;
@@ -59,6 +60,11 @@ class BasePath
     public function jsonRequest(Schema|SchemaComponent|array $schema): self
     {
         return $this->requestBody(RequestBody::make(ApplicationJson::make($schema)));
+    }
+
+    public function multipartFormData(Schema|SchemaComponent|array $schema): self
+    {
+        return $this->requestBody(RequestBody::make(MultipartFormData::make($schema)));
     }
 
     public function requestBody(RequestBody $requestBody): self

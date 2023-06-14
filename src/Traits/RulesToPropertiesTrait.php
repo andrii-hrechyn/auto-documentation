@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Traits;
 
 use AutoDocumentation\Properties\BooleanProperty;
+use AutoDocumentation\Properties\FileProperty;
 use AutoDocumentation\Properties\IntegerProperty;
 use AutoDocumentation\Properties\NumberProperty;
 use AutoDocumentation\Properties\Property;
@@ -19,6 +20,7 @@ trait RulesToPropertiesTrait
             in_array('integer', $rules) => $this->processNumber($property, $rules, true),
             in_array('numeric', $rules) => $this->processNumber($property, $rules),
             in_array('boolean', $rules) => BooleanProperty::make($property),
+            in_array('file', $rules)    => FileProperty::make($property),
             //todo add Array processing
 //            in_array('array', $rules)   => Property::make($property, Type::array),
             default                     => $this->processString($property, $rules),
