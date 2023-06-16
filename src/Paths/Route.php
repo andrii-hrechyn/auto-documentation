@@ -5,6 +5,7 @@ namespace AutoDocumentation\Paths;
 use AutoDocumentation\Exceptions\RouteNotFoundException;
 use AutoDocumentation\OpenApi;
 use AutoDocumentation\Traits\RulesToPropertyTrait;
+use AutoDocumentation\ValidationRuleParser;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Support\Facades\Route as RouteFacade;

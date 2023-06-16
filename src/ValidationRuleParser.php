@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoDocumentation\Paths;
+namespace AutoDocumentation;
 
 use AutoDocumentation\Properties\ArrayProperty;
 use AutoDocumentation\Properties\ObjectProperty;
