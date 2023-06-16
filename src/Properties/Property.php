@@ -13,7 +13,7 @@ use AutoDocumentation\Schemas\Schema;
  *
  * @see Schema
  */
-abstract class Property
+class Property
 {
     protected string $name;
     protected Schema $schema;

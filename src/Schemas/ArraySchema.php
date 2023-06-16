@@ -9,6 +9,9 @@ use AutoDocumentation\Helpers\SchemaHelper;
 class ArraySchema extends Schema
 {
     private Schema $items;
+    protected ?int $maxItems = null;
+    protected ?int $minItems = null;
+    protected bool $unique = false;
 
     public static function make(Schema|SchemaComponent $items): static
     {
@@ -21,10 +24,34 @@ class ArraySchema extends Schema
         $this->items = $items;
     }
 
+    public function maxItems(int $maximum): static
+    {
+        $this->maxItems = $maximum;
+
+        return $this;
+    }
+
+    public function minItems(int $minimum): static
+    {
+        $this->minItems = $minimum;
+
+        return $this;
+    }
+
+    public function unique(): static
+    {
+        $this->unique = true;
+
+        return $this;
+    }
+
     protected function additionalFields(): array
     {
         return [
-            'items' => $this->items->resolve(),
+            'items'       => $this->items->resolve(),
+            'maxItems'    => $this->maxItems,
+            'minItems'    => $this->minItems,
+            'uniqueItems' => $this->unique,
         ];
     }
 }

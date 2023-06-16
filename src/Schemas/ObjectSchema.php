@@ -36,6 +36,13 @@ class ObjectSchema extends Schema
         return $this;
     }
 
+    public function merge(array $properties): static
+    {
+        $this->properties = array_merge($this->properties, $properties);
+
+        return $this;
+    }
+
     protected function additionalFields(): array
     {
         return [

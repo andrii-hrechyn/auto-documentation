@@ -4,8 +4,7 @@ namespace AutoDocumentation\Paths;
 
 use AutoDocumentation\Exceptions\RouteNotFoundException;
 use AutoDocumentation\OpenApi;
-use AutoDocumentation\Schemas\ObjectSchema;
-use AutoDocumentation\Traits\RulesToPropertiesTrait;
+use AutoDocumentation\Traits\RulesToPropertyTrait;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Support\Facades\Route as RouteFacade;
@@ -14,7 +13,7 @@ use ReflectionMethod;
 
 class Route extends BasePath
 {
-    use RulesToPropertiesTrait;
+    use RulesToPropertyTrait;
 
     protected LaravelRoute $route;
 
@@ -49,17 +48,11 @@ class Route extends BasePath
 
         $validationRules = app()->call([new $requestClass(), 'rules']);
 
-        $requestSchema = new ObjectSchema();
+        $parser = new ValidationRuleParser();
 
-        foreach ($validationRules as $property => $rules) {
-            if (is_string($rules)) {
-                $rules = explode('|', $rules);
-            }
+        $schema = $parser->parse($validationRules);
 
-            $requestSchema->add($this->parsePropertyBasedOnValidationRules($property, $rules));
-        }
-
-        $this->jsonRequest($requestSchema);
+        $this->jsonRequest($schema);
 
         return $this;
     }
