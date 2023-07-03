@@ -43,6 +43,7 @@ class ValidationRuleParser
 
     private function parseArrays(Collection $validationRules): Collection
     {
+        //todo refactor it
         return $validationRules
             ->groupBy(fn(array $rules, string $property) => Str::before($property, '.'), true)
             ->map(function (Collection $arrays, string $property) {

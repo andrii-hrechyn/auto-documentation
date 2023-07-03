@@ -49,11 +49,13 @@ class Route extends BasePath
 
         $validationRules = app()->call([new $requestClass(), 'rules']);
 
-        $parser = new ValidationRuleParser();
+        if ($validationRules) {
+            $parser = new ValidationRuleParser();
 
-        $schema = $parser->parse($validationRules);
+            $schema = $parser->parse($validationRules);
 
-        $this->jsonRequest($schema);
+            $this->jsonRequest($schema);
+        }
 
         return $this;
     }
