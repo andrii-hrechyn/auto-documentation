@@ -7,6 +7,7 @@ use AutoDocumentation\OpenApi;
 use AutoDocumentation\RequestBodies\MediaTypes\ApplicationJson;
 use AutoDocumentation\RequestBodies\MediaTypes\MultipartFormData;
 use AutoDocumentation\RequestBodies\RequestBody;
+use AutoDocumentation\Responses\NoContentResponse;
 use AutoDocumentation\Responses\SuccessfulResponse;
 use AutoDocumentation\Schemas\Schema;
 use Illuminate\Support\Collection;
@@ -81,6 +82,13 @@ class BasePath
         if ($schema) {
             $response->schema($schema);
         }
+
+        return $this->responses([$response]);
+    }
+
+    public function noContentResponse()
+    {
+        $response = NoContentResponse::make();
 
         return $this->responses([$response]);
     }
