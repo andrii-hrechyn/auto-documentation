@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Traits;
 
 use AutoDocumentation\Properties\ArrayProperty;
+use AutoDocumentation\Properties\DateTimeProperty;
 use AutoDocumentation\Properties\FileProperty;
 use AutoDocumentation\Properties\Property;
 use AutoDocumentation\Schemas\ArraySchema;
@@ -22,6 +23,7 @@ trait RulesToPropertyTrait
 
         $property = match (true) {
             in_array('file', $rules) => FileProperty::make($propertyName),
+            in_array('date', $rules) => DateTimeProperty::make($propertyName),
             default                  => $property,
         };
 
