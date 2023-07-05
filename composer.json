@@ -1,6 +1,6 @@
 {
     "name": "andrii-hrechyn/auto-documentation",
-    "description": "Auto documentation for laravel",
+    "description": "Auto generated documentation for laravel",
     "type": "library",
     "license": "MIT",
     "authors": [
