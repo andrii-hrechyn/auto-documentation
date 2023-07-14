@@ -4,7 +4,7 @@ namespace AutoDocumentation;
 
 class Info
 {
-    protected string $description;
+    protected string $description = '';
     protected ?string $termsOfService = null;
 
     protected ?Contact $contact = null;

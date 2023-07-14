@@ -28,9 +28,9 @@
     },
     "require-dev": {
         "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^1.22",
-        "pestphp/pest-plugin-laravel": "^1.4",
-        "pestphp/pest-plugin-mock": "^1.0"
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "pestphp/pest-plugin-mock": "^v2.0.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -5,9 +5,9 @@ namespace AutoDocumentation;
 class Contact
 {
     public function __construct(
-        protected readonly string $name,
-        protected readonly string $email,
-        protected readonly string $url
+        protected readonly string $name = '',
+        protected readonly string $email = '',
+        protected readonly string $url = ''
     ) {
     }
 
