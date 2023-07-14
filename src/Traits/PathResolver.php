@@ -25,36 +25,12 @@ trait PathResolver
         $responses = $path->getResponses()->mapWithKeys(fn(Resolvable $resolvable) => $resolvable->resolve());
 
         return [
-            'summary'    => $path->summary,
-            'tags'       => $path->getTags(),
-            'parameters' => $parameters->toArray(),
-            ...$this->requestBody($path),
-            'responses'  => $responses->toArray(),
-            ...$this->security($path),
-        ];
-    }
-
-    private function requestBody(BasePath $path): array
-    {
-        if (!$path->getRequestBody()) {
-            return [];
-        }
-
-        return [
-            'requestBody' => $path->getRequestBody()->resolve(),
-        ];
-    }
-
-    private function security(BasePath $path): array
-    {
-        if (!$path->getSecurity()) {
-            return [];
-        }
-
-        return [
-            'security' => [
-                [$path->getSecurity() => []],
-            ],
+            'summary'     => $path->summary,
+            'tags'        => $path->getTags(),
+            'parameters'  => $parameters->toArray(),
+            'requestBody' => $path->getRequestBody()?->resolve(),
+            'responses'   => $responses->toArray(),
+            'security'    => $path->getSecurity() ? [[$path->getSecurity() => []]] : null,
         ];
     }
 }

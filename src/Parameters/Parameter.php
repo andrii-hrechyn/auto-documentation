@@ -85,21 +85,10 @@ class Parameter implements Resolvable
             'deprecated'      => $this->deprecated,
             'allowEmptyValue' => $this->allowEmptyValue,
             'example'         => $this->example,
-            ...$this->mergeExamples(),
+            'examples'        => $this->examples,
             'schema'          => [
                 'type' => $this->type->name,
             ],
-        ];
-    }
-
-    private function mergeExamples(): array
-    {
-        if (!$this->examples) {
-            return [];
-        }
-
-        return [
-            'examples' => $this->examples,
         ];
     }
 }

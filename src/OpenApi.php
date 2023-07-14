@@ -22,6 +22,7 @@ class OpenApi
     protected Info $info;
     protected array $servers = [];
     protected ?SecurityScheme $securitySchemes = null;
+    protected ?ExternalDocs $externalDocs = null;
     protected array $paths = [];
 
     private function __construct()
@@ -58,6 +59,13 @@ class OpenApi
         return $securityScheme;
     }
 
+    public function registerExternalDocs(ExternalDocs $externalDocs): ExternalDocs
+    {
+        $this->externalDocs = $externalDocs;
+
+        return $externalDocs;
+    }
+
     public function defaultSecurityScheme(): SecurityScheme
     {
         return $this->securitySchemes;
@@ -72,17 +80,18 @@ class OpenApi
 
     public function generate(): array
     {
-        return [
-            'openapi'     => self::OPEN_API_VERSION,
-            'info'        => $this->info->toArray(),
-            'x-tagGroups' => $this->groupsFromPaths($this->paths),
-            'servers'     => $this->prepareServers($this->servers),
-            'paths'       => $this->resolvePaths($this->paths),
-            'components'  => [
+        return $this->filterEmptyValue([
+            'openapi'      => self::OPEN_API_VERSION,
+            'info'         => $this->info->toArray(),
+            'externalDocs' => $this->externalDocs->toArray(),
+            'x-tagGroups'  => $this->groupsFromPaths($this->paths),
+            'servers'      => $this->prepareServers($this->servers),
+            'paths'        => $this->resolvePaths($this->paths),
+            'components'   => [
                 ...ComponentsRegistry::all(),
                 'securitySchemes' => $this->securitySchemes?->resolve(),
             ],
-        ];
+        ]);
     }
 
     private function prepareServers(array $servers): array
@@ -115,5 +124,18 @@ class OpenApi
         $this->filesystem->ensureDirectoryExists(dirname($path));
 
         $this->filesystem->put($path, $this->generateYaml());
+    }
+
+    private function filterEmptyValue(array $array): array
+    {
+        return collect($array)
+            ->map(function ($value) {
+                if (is_array($value)) {
+                    return empty($value) ? null : $this->filterEmptyValue($value);
+                }
+
+                return $value;
+            })
+            ->filter(fn($value) => $value)->all();
     }
 }

@@ -55,7 +55,7 @@ abstract class Schema implements Resolvable
 
     public function resolve(): array
     {
-        return $this->filterEmptyValue([
+        return [
             'type'        => $this->type->name,
             'title'       => $this->title,
             'format'      => $this->format,
@@ -63,17 +63,12 @@ abstract class Schema implements Resolvable
             'enum'        => $this->enum,
             'description' => $this->description,
             ...$this->additionalFields(),
-        ]);
+        ];
     }
 
     protected function additionalFields(): array
     {
         return [];
-    }
-
-    protected function filterEmptyValue($array): array
-    {
-        return array_filter($array, fn($v) => $v);
     }
 
     protected function prepareDefault($default)

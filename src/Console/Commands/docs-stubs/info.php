@@ -1,5 +1,6 @@
 <?php
 
+use AutoDocumentation\ExternalDocs;
 use AutoDocumentation\Info;
 use AutoDocumentation\SecuritySchemes\SecurityScheme;
 use AutoDocumentation\Server;
@@ -14,6 +15,6 @@ SecurityScheme::make('SanctumAuth', 'http', 'header')
     `Authorization: Bearer {Auth token}`');
 
 Server::make('http://localhost.com/api', 'Local server');
+Server::make('http://sandbox.com/api', 'Sandbox server');
 
-
-
+ExternalDocs::make('http://localhost.com', 'Example of external doc');
