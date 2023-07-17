@@ -4,6 +4,8 @@ namespace AutoDocumentation\Paths;
 
 use AutoDocumentation\Components\SchemaComponent;
 use AutoDocumentation\Components\SecuritySchemeComponent;
+use AutoDocumentation\Contracts\Resolvable;
+use AutoDocumentation\ExternalDocs;
 use AutoDocumentation\OpenApi;
 use AutoDocumentation\RequestBodies\MediaTypes\ApplicationJson;
 use AutoDocumentation\RequestBodies\MediaTypes\MultipartFormData;
@@ -11,31 +13,33 @@ use AutoDocumentation\RequestBodies\RequestBody;
 use AutoDocumentation\Responses\NoContentResponse;
 use AutoDocumentation\Responses\SuccessfulResponse;
 use AutoDocumentation\Schemas\Schema;
+use AutoDocumentation\Server;
 use Illuminate\Support\Collection;
 
 class BasePath
 {
-    protected string $group = 'other';
+    public readonly string $method;
+    public readonly string $path;
     protected array $tags = [];
+    public readonly string $summary;
+    protected ?string $description = null;
+    protected ?ExternalDocs $externalDocs = null;
+    protected ?string $operationId = null;
     protected Collection $parameters;
     protected ?RequestBody $requestBody = null;
     protected Collection $responses;
+    protected bool $deprecated = false;
     protected ?SecuritySchemeComponent $security = null;
+    protected array $servers = [];
+    protected string $group = 'other';
 
-    public function __construct(
-        public readonly string $method,
-        public readonly string $path,
-        public readonly string $summary
-    ) {
+    public function __construct(string $method, string $path, string $summary)
+    {
+        $this->method = $method;
+        $this->path = $path;
+        $this->summary = $summary;
         $this->parameters = new Collection();
         $this->responses = new Collection();
-    }
-
-    public function group(string $group): self
-    {
-        $this->group = $group;
-
-        return $this;
     }
 
     public function tag(string $tag): self
@@ -48,6 +52,27 @@ class BasePath
     public function tags(array $tags): self
     {
         $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function description(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function externalDocs(ExternalDocs $externalDocs): self
+    {
+        $this->externalDocs = $externalDocs;
+
+        return $this;
+    }
+
+    public function operationId(string $operationId): self
+    {
+        $this->operationId = $operationId;
 
         return $this;
     }
@@ -101,9 +126,30 @@ class BasePath
         return $this;
     }
 
+    public function deprecated(bool $deprecated = true): self
+    {
+        $this->deprecated = $deprecated;
+
+        return $this;
+    }
+
     public function secure(SecuritySchemeComponent $securityScheme = null): self
     {
         $this->security = $securityScheme ?? $this->defaultSecurityScheme();
+
+        return $this;
+    }
+
+    public function server(Server $server): Server
+    {
+        $this->servers[] = $server;
+
+        return $server;
+    }
+
+    public function group(string $group): self
+    {
+        $this->group = $group;
 
         return $this;
     }
@@ -121,27 +167,29 @@ class BasePath
         return $this->tags;
     }
 
-    public function getParameters(): Collection
+    public function resolve(): array
     {
-        return $this->parameters;
+        $parameters = $this->parameters->map(fn(Resolvable $resolvable) => $resolvable->resolve());
+        $responses = $this->responses->mapWithKeys(fn(Resolvable $resolvable) => $resolvable->resolve());
+
+        return [
+            'tags'         => $this->tags,
+            'summary'      => $this->summary,
+            'description'  => $this->description,
+            'externalDocs' => $this->externalDocs,
+            'operationId'  => $this->operationId,
+            'parameters'   => $parameters->toArray(),
+            'requestBody'  => $this->requestBody?->resolve(),
+            'responses'    => $responses->toArray(),
+            'deprecated'   => $this->deprecated,
+            'security'     => $this->security ? [$this->security->resolve()] : null,
+            'servers'      => $this->prepareServers(),
+        ];
     }
 
-    public function getRequestBody(): ?RequestBody
+    public function prepareServers(): array
     {
-        return $this->requestBody;
-    }
-
-    public function getResponses(): Collection
-    {
-        return $this->responses;
-    }
-
-    /**
-     * @return SecuritySchemeComponent|null
-     */
-    public function getSecurity(): ?SecuritySchemeComponent
-    {
-        return $this->security;
+        return array_map(fn(Server $server) => $server->toArray(), $this->servers);
     }
 
     private function defaultSecurityScheme(): ?SecuritySchemeComponent
