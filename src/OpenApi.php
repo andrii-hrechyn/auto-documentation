@@ -2,12 +2,11 @@
 
 namespace AutoDocumentation;
 
+use AutoDocumentation\Components\SecuritySchemeComponent;
 use AutoDocumentation\Paths\BasePath;
-use AutoDocumentation\SecuritySchemes\SecurityScheme;
 use AutoDocumentation\Traits\ComponentResolver;
 use AutoDocumentation\Traits\PathResolver;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
 class OpenApi
 {
@@ -21,9 +20,19 @@ class OpenApi
 
     protected Info $info;
     protected array $servers = [];
-    protected ?SecurityScheme $securitySchemes = null;
-    protected ?ExternalDocs $externalDocs = null;
+
     protected array $paths = [];
+    protected array $components = [];
+    protected array $security = [];
+    protected ?ExternalDocs $externalDocs = null;
+    /*
+     * Applied for all route marked as secure ( "secure" method in Path object without parameter )
+     */
+    protected ?SecuritySchemeComponent $defaultSecurityScheme = null;
+
+    protected array $ignoreEmptyValueFiltering = [
+        'security',
+    ];
 
     private function __construct()
     {
@@ -38,40 +47,47 @@ class OpenApi
         return self::$instance = new self();
     }
 
-    public function registerInfo(Info $info): Info
+    public function info(Info $info): Info
     {
         $this->info = $info;
 
         return $info;
     }
 
-    public function registerServer(Server $server): Server
+    public function server(Server $server): Server
     {
         $this->servers[] = $server;
 
         return $server;
     }
 
-    public function registerSecuritySchemes(SecurityScheme $securityScheme): SecurityScheme
+    public function setDefaultSecurityScheme(SecuritySchemeComponent $securityScheme): self
     {
-        $this->securitySchemes = $securityScheme;
+        $this->defaultSecurityScheme = $securityScheme;
 
-        return $securityScheme;
+        return $this;
     }
 
-    public function registerExternalDocs(ExternalDocs $externalDocs): ExternalDocs
+    public function setSecurity(SecuritySchemeComponent $securityScheme): self
+    {
+        $this->security[] = $securityScheme;
+
+        return $this;
+    }
+
+    public function externalDocs(ExternalDocs $externalDocs): ExternalDocs
     {
         $this->externalDocs = $externalDocs;
 
         return $externalDocs;
     }
 
-    public function defaultSecurityScheme(): SecurityScheme
+    public function getDefaultSecurityScheme(): ?SecuritySchemeComponent
     {
-        return $this->securitySchemes;
+        return $this->defaultSecurityScheme;
     }
 
-    public function registryPath(BasePath $path): BasePath
+    public function path(BasePath $path): BasePath
     {
         $this->paths[] = $path;
 
@@ -83,15 +99,23 @@ class OpenApi
         return $this->filterEmptyValue([
             'openapi'      => self::OPEN_API_VERSION,
             'info'         => $this->info->toArray(),
+            'servers'      => $this->prepareServers($this->servers),
+            'paths'        => $this->preparePaths($this->paths),
+            'components'   => ComponentsRegistry::all(),
+            'security'     => $this->prepareSecurity($this->security),
             'externalDocs' => $this->externalDocs->toArray(),
             'x-tagGroups'  => $this->groupsFromPaths($this->paths),
-            'servers'      => $this->prepareServers($this->servers),
-            'paths'        => $this->resolvePaths($this->paths),
-            'components'   => [
-                ...ComponentsRegistry::all(),
-                'securitySchemes' => $this->securitySchemes?->resolve(),
-            ],
         ]);
+    }
+
+    public static function defaultSecurityScheme(SecuritySchemeComponent $securitySchemeComponent): self
+    {
+        return self::instance()->setDefaultSecurityScheme($securitySchemeComponent);
+    }
+
+    public static function security(SecuritySchemeComponent $securitySchemeComponent): self
+    {
+        return self::instance()->setSecurity($securitySchemeComponent);
     }
 
     private function prepareServers(array $servers): array
@@ -99,37 +123,19 @@ class OpenApi
         return array_map(fn(Server $server) => $server->toArray(), $servers);
     }
 
-    public function load(string $documentationPath): void
+    private function prepareSecurity(array $securities): array
     {
-        $this->loader->load($documentationPath);
-    }
-
-    public function setLoader(Loader $loader): void
-    {
-        $this->loader = $loader;
-    }
-
-    public function setFilesystem(Filesystem $filesystem): void
-    {
-        $this->filesystem = $filesystem;
-    }
-
-    public function generateYaml(): string
-    {
-        return Yaml::dump($this->generate(), 25, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
-    }
-
-    public function storeDocumentation(string $path): void
-    {
-        $this->filesystem->ensureDirectoryExists(dirname($path));
-
-        $this->filesystem->put($path, $this->generateYaml());
+        return array_map(fn(SecuritySchemeComponent $security) => $security->resolve(), $securities);
     }
 
     private function filterEmptyValue(array $array): array
     {
         return collect($array)
-            ->map(function ($value) {
+            ->map(function ($value, string $key) {
+                if (in_array($key, $this->ignoreEmptyValueFiltering)) {
+                    return $value;
+                }
+
                 if (is_array($value)) {
                     return empty($value) ? null : $this->filterEmptyValue($value);
                 }

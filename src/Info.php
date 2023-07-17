@@ -12,7 +12,7 @@ class Info
 
     public static function make(string $title, string $version): self
     {
-        return OpenApi::instance()->registerInfo(new self($title, $version));
+        return OpenApi::instance()->info(new self($title, $version));
     }
 
     private function __construct(

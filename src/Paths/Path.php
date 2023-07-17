@@ -16,7 +16,7 @@ class Path extends BasePath
 {
     public static function make(string $method, string $path, string $summary): Path
     {
-        return OpenApi::instance()->registryPath(new Path($method, $path, $summary));
+        return OpenApi::instance()->path(new Path($method, $path, $summary));
     }
 
     public static function __callStatic(string $method, array $arguments)

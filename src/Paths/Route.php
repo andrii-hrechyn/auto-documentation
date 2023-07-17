@@ -34,7 +34,7 @@ class Route extends BasePath
             throw new RouteNotFoundException($name);
         }
 
-        return OpenApi::instance()->registryPath(
+        return OpenApi::instance()->path(
             new static(Str::lower($route->methods[0]), '/'.ltrim($route->uri, '/'), $summary, $route)
         );
     }

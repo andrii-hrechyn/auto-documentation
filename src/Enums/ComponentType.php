@@ -7,6 +7,5 @@ enum ComponentType
     case parameters;
     case schemas;
     case responses;
-    //todo add securitySchemes as Component
-//    case securitySchemes;
+    case securitySchemes;
 }

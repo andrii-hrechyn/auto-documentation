@@ -6,7 +6,7 @@ class ExternalDocs
 {
     public static function make(string $url, string $description = ''): self
     {
-        return OpenApi::instance()->registerExternalDocs(new self($url, $description));
+        return OpenApi::instance()->externalDocs(new self($url, $description));
     }
 
     private function __construct(

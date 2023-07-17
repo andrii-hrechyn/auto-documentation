@@ -7,7 +7,7 @@ use AutoDocumentation\Paths\BasePath;
 
 trait PathResolver
 {
-    protected function resolvePaths(array $paths): array
+    protected function preparePaths(array $paths): array
     {
         $resolvedPaths = [];
 
@@ -30,7 +30,7 @@ trait PathResolver
             'parameters'  => $parameters->toArray(),
             'requestBody' => $path->getRequestBody()?->resolve(),
             'responses'   => $responses->toArray(),
-            'security'    => $path->getSecurity() ? [[$path->getSecurity() => []]] : null,
+            'security'    => $path->getSecurity() ? [$path->getSecurity()->resolve()] : null,
         ];
     }
 }

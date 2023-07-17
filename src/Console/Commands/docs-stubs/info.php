@@ -1,20 +1,24 @@
 <?php
 
+use AutoDocumentation\Contact;
 use AutoDocumentation\ExternalDocs;
 use AutoDocumentation\Info;
-use AutoDocumentation\SecuritySchemes\SecurityScheme;
+use AutoDocumentation\License;
+use AutoDocumentation\OpenApi;
+use AutoDocumentation\SecuritySchemes\SanctumAuth;
 use AutoDocumentation\Server;
 
 Info::make(env('APP_NAME'), '1.0.0')
+    ->contact(new Contact('My new contract', 'new@gmail.com', 'https://openapi.com'))
+    ->license(new License('My new licence', 'https://openapi.com'))
     ->description('Your application description');
 
-SecurityScheme::make('SanctumAuth', 'http', 'header')
-    ->scheme('bearer')
-    ->bearerFormat('sanctum')
-    ->description('Protected routes must have a required header: <br>
-    `Authorization: Bearer {Auth token}`');
+OpenApi::defaultSecurityScheme(SanctumAuth::make());
+//OpenApi::security(SanctumAuth::make());
 
 Server::make('http://localhost.com/api', 'Local server');
 Server::make('http://sandbox.com/api', 'Sandbox server');
 
-ExternalDocs::make('http://localhost.com', 'Example of external doc');
+ExternalDocs::make('http://localhost.com/api', 'Example of external doc');
+
+

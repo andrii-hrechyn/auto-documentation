@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Paths;
 
 use AutoDocumentation\Components\SchemaComponent;
+use AutoDocumentation\Components\SecuritySchemeComponent;
 use AutoDocumentation\OpenApi;
 use AutoDocumentation\RequestBodies\MediaTypes\ApplicationJson;
 use AutoDocumentation\RequestBodies\MediaTypes\MultipartFormData;
@@ -19,7 +20,7 @@ class BasePath
     protected Collection $parameters;
     protected ?RequestBody $requestBody = null;
     protected Collection $responses;
-    protected ?string $security = null;
+    protected ?SecuritySchemeComponent $security = null;
 
     public function __construct(
         public readonly string $method,
@@ -100,9 +101,9 @@ class BasePath
         return $this;
     }
 
-    public function secure(string $securityScheme = null): self
+    public function secure(SecuritySchemeComponent $securityScheme = null): self
     {
-        $this->security = $securityScheme ?? $this->defaultSecurity();
+        $this->security = $securityScheme ?? $this->defaultSecurityScheme();
 
         return $this;
     }
@@ -136,15 +137,15 @@ class BasePath
     }
 
     /**
-     * @return string|null
+     * @return SecuritySchemeComponent|null
      */
-    public function getSecurity(): ?string
+    public function getSecurity(): ?SecuritySchemeComponent
     {
         return $this->security;
     }
 
-    private function defaultSecurity(): string
+    private function defaultSecurityScheme(): ?SecuritySchemeComponent
     {
-        return OpenApi::instance()->defaultSecurityScheme()->name;
+        return OpenApi::instance()->getDefaultSecurityScheme();
     }
 }

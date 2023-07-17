@@ -8,7 +8,7 @@ class Server
 
     public static function make(string $server, string $description = ''): self
     {
-        return OpenApi::instance()->registerServer(new self($server, $description));
+        return OpenApi::instance()->server(new self($server, $description));
     }
 
     private function __construct(

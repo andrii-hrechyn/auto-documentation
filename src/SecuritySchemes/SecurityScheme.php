@@ -2,9 +2,9 @@
 
 namespace AutoDocumentation\SecuritySchemes;
 
-use AutoDocumentation\OpenApi;
+use AutoDocumentation\Contracts\Resolvable;
 
-class SecurityScheme
+class SecurityScheme implements Resolvable
 {
     protected string $scheme = '';
     protected string $bearerFormat = '';
@@ -12,7 +12,7 @@ class SecurityScheme
 
     public static function make(string $name, string $type, string $in): self
     {
-        return OpenApi::instance()->registerSecuritySchemes(new self($name, $type, $in));
+        return new self($name, $type, $in);
     }
 
     private function __construct(
@@ -46,13 +46,11 @@ class SecurityScheme
     public function resolve(): array
     {
         return [
-            $this->name => [
-                'type'         => $this->type,
-                'description'  => $this->description,
-                'in'           => $this->in,
-                'scheme'       => $this->scheme,
-                'bearerFormat' => $this->bearerFormat,
-            ],
+            'type'         => $this->type,
+            'description'  => $this->description,
+            'in'           => $this->in,
+            'scheme'       => $this->scheme,
+            'bearerFormat' => $this->bearerFormat,
         ];
     }
 }
