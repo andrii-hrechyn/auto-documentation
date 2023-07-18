@@ -38,17 +38,12 @@ Path::get('/your/api/endpoint', 'Your endpoint name')
     ->secure();
 
 //Also you can do that for routes
-Route::make('test.empty', 'Example empty route')
-    ->group('Route')
-    ->tag('Route ex')
+Route::make('name.of.your.route', 'Example route')
+    ->group('Some other group')
+    ->tag('Other tag')
     ->requestBodyFromRequestClass() // Get request body from validation rules in request class
     ->successfulResponse(ExampleSchema::make())
     ->secure();
-```
-Because all permissions will be registered on Laravel's gate, you can check if a user has a permission with Laravel's default can function:
-
-```php
-$user->can('edit articles');
 ```
 
 ## Installation
