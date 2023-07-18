@@ -6,11 +6,13 @@ use AutoDocumentation\Contracts\Resolvable;
 use AutoDocumentation\Enums\Type;
 use AutoDocumentation\Traits\CanBeDeprecated;
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExternalDocs;
 
 abstract class Schema implements Resolvable
 {
     use HasDescription;
     use CanBeDeprecated;
+    use HasExternalDocs;
 
     protected Type $type;
     protected ?string $title = null;
@@ -21,6 +23,7 @@ abstract class Schema implements Resolvable
     protected bool $nullable = false;
     protected bool $readOnly = false;
     protected bool $writeOnly = false;
+    protected ?string $example = null;
 
     public function title(string $title): static
     {
@@ -50,6 +53,13 @@ abstract class Schema implements Resolvable
         }
 
         $this->enum = $enum;
+
+        return $this;
+    }
+
+    public function example(string $example): static
+    {
+        $this->example = $example;
 
         return $this;
     }

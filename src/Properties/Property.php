@@ -11,6 +11,7 @@ use AutoDocumentation\Traits\CanBeRequired;
  * @method self enum(array|string $enum)
  * @method self default($default)
  * @method self description(string $description)
+ * @method self example(string $example)
  *
  * @see Schema
  */

@@ -5,7 +5,7 @@ use AutoDocumentation\Http\Controllers\SpecificationController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
-if (App::environment(['local', 'development', 'testing'])) {
+if (App::environment(config('auto-documentation.environment'))) {
     Route::get(config('auto-documentation.routes.documentation'), DocumentationController::class)
         ->name('auto-documentation.documentation');
 

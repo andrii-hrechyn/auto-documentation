@@ -45,10 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "AutoDocumentation\\PackageServiceProvider"
-            ],
-            "aliases": [
-                "JustSteveKing\\DataObjects\\Facades\\Hydrator"
+                "AutoDocumentation\\AutoDocumentationServiceProvider"
             ]
         }
     }

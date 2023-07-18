@@ -6,10 +6,9 @@ namespace AutoDocumentation;
 
 use AutoDocumentation\Console\Commands\GenerateDocumentation;
 use AutoDocumentation\Console\Commands\Install;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
-final class PackageServiceProvider extends ServiceProvider
+final class AutoDocumentationServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
@@ -32,17 +31,7 @@ final class PackageServiceProvider extends ServiceProvider
 
     protected function registerRoutes()
     {
-        Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        });
-    }
-
-    protected function routeConfiguration()
-    {
-        return [
-            'prefix' => config('blogpackage.prefix'),
-            'middleware' => config('blogpackage.middleware'),
-        ];
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
     }
 
     /**
@@ -55,5 +44,9 @@ final class PackageServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/auto-documentation.php' => config_path('auto-documentation.php'),
         ], 'auto-documentation');
+
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/autoDocumentation'),
+        ]);
     }
 }
