@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Properties;
 
 use AutoDocumentation\Schemas\Schema;
+use AutoDocumentation\Traits\CanBeRequired;
 
 /**
  * @method self title(string $title)
@@ -15,21 +16,15 @@ use AutoDocumentation\Schemas\Schema;
  */
 class Property
 {
+    use CanBeRequired;
+
     protected string $name;
     protected Schema $schema;
-    protected bool $required = false;
 
     public function __construct(string $name, Schema $schema)
     {
         $this->name = $name;
         $this->schema = $schema;
-    }
-
-    public function required(): static
-    {
-        $this->required = true;
-
-        return $this;
     }
 
     public function resolve(): array

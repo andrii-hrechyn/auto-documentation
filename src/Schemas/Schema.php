@@ -4,15 +4,23 @@ namespace AutoDocumentation\Schemas;
 
 use AutoDocumentation\Contracts\Resolvable;
 use AutoDocumentation\Enums\Type;
+use AutoDocumentation\Traits\CanBeDeprecated;
+use AutoDocumentation\Traits\HasDescription;
 
 abstract class Schema implements Resolvable
 {
+    use HasDescription;
+    use CanBeDeprecated;
+
     protected Type $type;
     protected ?string $title = null;
     protected ?string $format = null;
     protected mixed $default = null;
     protected ?array $enum = null;
-    protected ?string $description = null;
+
+    protected bool $nullable = false;
+    protected bool $readOnly = false;
+    protected bool $writeOnly = false;
 
     public function title(string $title): static
     {
@@ -42,13 +50,6 @@ abstract class Schema implements Resolvable
         }
 
         $this->enum = $enum;
-
-        return $this;
-    }
-
-    public function description(string $description): static
-    {
-        $this->description = $description;
 
         return $this;
     }

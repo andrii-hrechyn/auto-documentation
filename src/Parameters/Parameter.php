@@ -4,12 +4,16 @@ namespace AutoDocumentation\Parameters;
 
 use AutoDocumentation\Contracts\Resolvable;
 use AutoDocumentation\Enums\Type;
+use AutoDocumentation\Traits\CanBeDeprecated;
+use AutoDocumentation\Traits\CanBeRequired;
+use AutoDocumentation\Traits\HasDescription;
 
 class Parameter implements Resolvable
 {
-    protected ?string $description = null;
-    protected bool $required = false;
-    protected bool $deprecated = false;
+    use HasDescription;
+    use CanBeDeprecated;
+    use CanBeRequired;
+
     protected bool $allowEmptyValue = false;
     protected Type $type = Type::string;
     protected ?string $example = null;
@@ -45,30 +49,9 @@ class Parameter implements Resolvable
         return $this;
     }
 
-    public function description(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function required(): self
-    {
-        $this->required = true;
-
-        return $this;
-    }
-
     public function allowEmptyValue(): self
     {
         $this->allowEmptyValue = true;
-
-        return $this;
-    }
-
-    public function deprecated(): self
-    {
-        $this->deprecated = true;
 
         return $this;
     }

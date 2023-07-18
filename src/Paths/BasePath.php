@@ -5,7 +5,6 @@ namespace AutoDocumentation\Paths;
 use AutoDocumentation\Components\SchemaComponent;
 use AutoDocumentation\Components\SecuritySchemeComponent;
 use AutoDocumentation\Contracts\Resolvable;
-use AutoDocumentation\ExternalDocs;
 use AutoDocumentation\OpenApi;
 use AutoDocumentation\RequestBodies\MediaTypes\ApplicationJson;
 use AutoDocumentation\RequestBodies\MediaTypes\MultipartFormData;
@@ -14,21 +13,25 @@ use AutoDocumentation\Responses\NoContentResponse;
 use AutoDocumentation\Responses\SuccessfulResponse;
 use AutoDocumentation\Schemas\Schema;
 use AutoDocumentation\Server;
+use AutoDocumentation\Traits\CanBeDeprecated;
+use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExternalDocs;
 use Illuminate\Support\Collection;
 
 class BasePath
 {
+    use HasExternalDocs;
+    use HasDescription;
+    use CanBeDeprecated;
+
     public readonly string $method;
     public readonly string $path;
     protected array $tags = [];
     public readonly string $summary;
-    protected ?string $description = null;
-    protected ?ExternalDocs $externalDocs = null;
     protected ?string $operationId = null;
     protected Collection $parameters;
     protected ?RequestBody $requestBody = null;
     protected Collection $responses;
-    protected bool $deprecated = false;
     protected ?SecuritySchemeComponent $security = null;
     protected array $servers = [];
     protected string $group = 'other';
@@ -52,20 +55,6 @@ class BasePath
     public function tags(array $tags): self
     {
         $this->tags = $tags;
-
-        return $this;
-    }
-
-    public function description(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function externalDocs(ExternalDocs $externalDocs): self
-    {
-        $this->externalDocs = $externalDocs;
 
         return $this;
     }
@@ -122,13 +111,6 @@ class BasePath
     public function responses(array $responses): self
     {
         $this->responses = collect($responses);
-
-        return $this;
-    }
-
-    public function deprecated(bool $deprecated = true): self
-    {
-        $this->deprecated = $deprecated;
 
         return $this;
     }

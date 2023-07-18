@@ -2,23 +2,20 @@
 
 namespace AutoDocumentation\RequestBodies;
 
+use AutoDocumentation\Traits\CanBeRequired;
+use AutoDocumentation\Traits\HasDescription;
+
 class RequestBody
 {
+    use HasDescription;
+    use CanBeRequired;
+
     protected Content $content;
-    protected bool $required;
-    protected string $description = '';
 
     public function __construct(Content $content, $required = true)
     {
         $this->content = $content;
         $this->required = $required;
-    }
-
-    public function description(string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
     }
 
     public function resolve(): array

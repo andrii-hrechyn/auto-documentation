@@ -7,12 +7,14 @@ use AutoDocumentation\Contracts\Resolvable;
 use AutoDocumentation\Reference;
 use AutoDocumentation\Schemas\ObjectSchema;
 use AutoDocumentation\Schemas\Schema;
+use AutoDocumentation\Traits\HasDescription;
 
 class Response implements Resolvable
 {
+    use HasDescription;
+
     protected string $contentType;
     protected Schema|Reference|null $schema = null;
-    protected string $description = '';
 
     public static function make(int $statusCode): self
     {
@@ -42,13 +44,6 @@ class Response implements Resolvable
         }
 
         $this->schema = $schema;
-
-        return $this;
-    }
-
-    public function description(string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }

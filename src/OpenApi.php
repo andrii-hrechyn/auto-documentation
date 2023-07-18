@@ -5,12 +5,18 @@ namespace AutoDocumentation;
 use AutoDocumentation\Components\SecuritySchemeComponent;
 use AutoDocumentation\Paths\BasePath;
 use AutoDocumentation\Traits\ComponentResolver;
+use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\PathResolver;
 use Illuminate\Filesystem\Filesystem;
 
 class OpenApi
 {
-    use PathResolver, ComponentResolver, GroupsAggregator;
+    use PathResolver;
+    use ComponentResolver;
+    use GroupsAggregator;
+    use HasExternalDocs {
+        HasExternalDocs::externalDocs as setExternalDocs;
+    }
 
     const OPEN_API_VERSION = '3.1.0';
 
@@ -24,7 +30,6 @@ class OpenApi
     protected array $paths = [];
     protected array $components = [];
     protected array $security = [];
-    protected ?ExternalDocs $externalDocs = null;
     /*
      * Applied for all route marked as secure ( "secure" method in Path object without parameter )
      */
@@ -75,13 +80,6 @@ class OpenApi
         return $this;
     }
 
-    public function externalDocs(ExternalDocs $externalDocs): ExternalDocs
-    {
-        $this->externalDocs = $externalDocs;
-
-        return $externalDocs;
-    }
-
     public function getDefaultSecurityScheme(): ?SecuritySchemeComponent
     {
         return $this->defaultSecurityScheme;
@@ -116,6 +114,11 @@ class OpenApi
     public static function security(SecuritySchemeComponent $securitySchemeComponent): self
     {
         return self::instance()->setSecurity($securitySchemeComponent);
+    }
+
+    public static function externalDocs(ExternalDocs $externalDocs): self
+    {
+        return self::instance()->setExternalDocs($externalDocs);
     }
 
     private function prepareServers(array $servers): array
