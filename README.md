@@ -71,9 +71,6 @@ Also, this command will add autoload to your composer.json
     },
     ...
 ```
-
-## Usage
-
 ```docs``` folder contains all files related to documentation.
 Folder structure:
 ```
@@ -91,12 +88,14 @@ Folder structure:
 
 ```info.php``` contains general information about API (info, servers, security, default security and external docs link)
 
+## Usage
+
 For generate documentation run command:
 
 ```bash
 php artisan auto-doc:generate
 ```
-This command create ```documentation.yaml``` file in ```storage/app/auto-docs```
+This command take info.php file and all paths from ```docs``` folder and generate ```documentation.yaml``` in ```storage/app/auto-docs```
 
 ## Configuration
 
