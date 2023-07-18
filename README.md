@@ -28,7 +28,7 @@ Path::get('/your/api/{endpoint}', 'Your endpoint name')
     ])
     ->secure();
 
-// Or you can send existing schemas
+// Or you can use existing schemas
 Path::get('/your/api/endpoint', 'Your endpoint name')
     ->group('Some group')
     ->tag('Some tag') // or ->tags(['First tag', 'Second tag'])
