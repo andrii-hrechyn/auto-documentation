@@ -7,23 +7,21 @@ use AutoDocumentation\Enums\Type;
 
 class Parameter implements Resolvable
 {
+    protected ?string $description = null;
+    protected bool $required = false;
+    protected bool $deprecated = false;
+    protected bool $allowEmptyValue = false;
+    protected Type $type = Type::string;
+    protected ?string $example = null;
+    protected array $examples = [];
+
     public static function make(string $name, string $in): static
     {
         return new static($name, $in);
     }
 
-    public function __construct(
-        public readonly string $name,
-        public readonly string $in,
-        protected Type $type = Type::string,
-        protected string $example = '',
-        protected array $examples = [],
-        protected string $description = '',
-        protected bool $required = false,
-        protected bool $allowEmptyValue = false,
-        protected bool $deprecated = false
-    ) {
-
+    public function __construct(public readonly string $name, public readonly string $in)
+    {
     }
 
     public function type(Type $type)
