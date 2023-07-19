@@ -1,6 +1,6 @@
 # Auto Documentation
 
-Auto Documentation is a library for generating auto documentation for Laravel.
+Auto Documentation is a library for generating API documentation for Laravel.
 
 # What It Does
 This package allows you to generate API documentation. Based on [OpenAPI 3](https://github.com/OAI/OpenAPI-Specification) and [Redoc](https://github.com/Redocly/redoc)
