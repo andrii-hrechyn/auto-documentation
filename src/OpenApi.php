@@ -101,7 +101,7 @@ class OpenApi
             'paths'        => $this->preparePaths($this->paths),
             'components'   => ComponentsRegistry::all(),
             'security'     => $this->prepareSecurity($this->security),
-            'externalDocs' => $this->externalDocs->toArray(),
+            'externalDocs' => $this->externalDocs?->toArray(),
             'x-tagGroups'  => $this->groupsFromPaths($this->paths),
         ]);
     }
