@@ -2,12 +2,12 @@
 
 namespace AutoDocumentation\Enums;
 
-enum Type
+enum Type: string
 {
-    case array;
-    case boolean;
-    case integer;
-    case number;
-    case object;
-    case string;
+    case INTEGER = 'integer';
+    case NUMBER = 'number';
+    case STRING = 'string';
+    case BOOLEAN = 'boolean';
+    case OBJECT = 'object';
+    case ARRAY = 'array';
 }

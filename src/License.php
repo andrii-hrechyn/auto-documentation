@@ -2,19 +2,21 @@
 
 namespace AutoDocumentation;
 
+use AutoDocumentation\Traits\HasName;
+use AutoDocumentation\Traits\HasUrl;
+
 class License
 {
-    public function __construct(
-        protected readonly string $name,
-        protected readonly ?string $url = null
-    ) {
+    use HasName;
+    use HasUrl;
+
+    public function __construct(string $name)
+    {
+        $this->name($name);
     }
 
-    public function toArray(): array
+    public static function make(string $name): static
     {
-        return [
-            'name' => $this->name,
-            'url'  => $this->url,
-        ];
+        return new static($name);
     }
 }

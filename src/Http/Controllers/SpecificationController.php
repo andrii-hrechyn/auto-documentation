@@ -11,8 +11,8 @@ class SpecificationController
     {
         $generatedDocPath = rtrim(config('auto-documentation.paths.generated-doc'), '/').'/documentation.yaml';
 
-        if (File::exists($generatedDocPath)) {
-            $documentation->generate();
+        if (!File::exists($generatedDocPath)) {
+//            $documentation->generate();
         }
 
         return response()->file($generatedDocPath, ['Content-type' => 'text/x-yaml']);

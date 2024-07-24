@@ -2,80 +2,23 @@
 
 namespace AutoDocumentation\Responses;
 
-use AutoDocumentation\Components\SchemaComponent;
-use AutoDocumentation\Contracts\Resolvable;
-use AutoDocumentation\Reference;
-use AutoDocumentation\Schemas\ObjectSchema;
-use AutoDocumentation\Schemas\Schema;
+use AutoDocumentation\Traits\HasContent;
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasName;
 
-class Response implements Resolvable
+class Response
 {
+    use HasName;
     use HasDescription;
+    use HasContent;
 
-    protected string $contentType;
-    protected Schema|Reference|null $schema = null;
-
-    public static function make(int $statusCode): self
+    public function __construct(int $statusCode)
     {
-        return new self($statusCode);
+        $this->name($statusCode);
     }
 
-    private function __construct(
-        public readonly int $statusCode
-    ) {
-    }
-
-    public function contentType(string $contentType): self
+    public static function make(int $statusCode): static
     {
-        $this->contentType = $contentType;
-
-        return $this;
-    }
-
-    public function schema(Schema|SchemaComponent|array $schema): self
-    {
-        if (is_array($schema)) {
-            $schema = ObjectSchema::make($schema);
-        }
-
-        if ($schema instanceof SchemaComponent) {
-            $schema = $schema->reference();
-        }
-
-        $this->schema = $schema;
-
-        return $this;
-    }
-
-    public function resolve(): array
-    {
-        return [
-            (string) $this->statusCode => [
-                'description' => $this->description,
-                ...$this->content(),
-            ],
-        ];
-    }
-
-    private function content(): array
-    {
-        if (!$this->schema) {
-            return [];
-        }
-
-        return [
-            'content' => [
-                    $this->contentType ?? $this->defaultContentType() => [
-                    'schema' => $this->schema->resolve(),
-                ],
-            ],
-        ];
-    }
-
-    private function defaultContentType(): string
-    {
-        //todo move it to config
-        return 'application/json';
+        return new static($statusCode);
     }
 }

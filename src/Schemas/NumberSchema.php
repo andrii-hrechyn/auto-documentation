@@ -6,8 +6,8 @@ use AutoDocumentation\Enums\Type;
 
 class NumberSchema extends IntegerSchema
 {
-    protected function getType(): Type
+    public function __construct()
     {
-        return Type::number;
+        $this->type = Type::NUMBER;
     }
 }

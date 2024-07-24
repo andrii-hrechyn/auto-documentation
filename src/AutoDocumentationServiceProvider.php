@@ -8,7 +8,7 @@ use AutoDocumentation\Console\Commands\GenerateDocumentation;
 use AutoDocumentation\Console\Commands\Install;
 use Illuminate\Support\ServiceProvider;
 
-final class AutoDocumentationServiceProvider extends ServiceProvider
+class AutoDocumentationServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {

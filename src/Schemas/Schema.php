@@ -2,42 +2,32 @@
 
 namespace AutoDocumentation\Schemas;
 
-use AutoDocumentation\Contracts\Resolvable;
 use AutoDocumentation\Enums\Type;
-use AutoDocumentation\Traits\CanBeDeprecated;
+use AutoDocumentation\Traits\HasDeprecated;
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasEnum;
+use AutoDocumentation\Traits\HasExample;
+use AutoDocumentation\Traits\HasExamples;
 use AutoDocumentation\Traits\HasExternalDocs;
+use AutoDocumentation\Traits\HasFormat;
+use AutoDocumentation\Traits\HasTitle;
 
-abstract class Schema implements Resolvable
+abstract class Schema
 {
+    use HasTitle;
     use HasDescription;
-    use CanBeDeprecated;
+    use HasDeprecated;
     use HasExternalDocs;
+    use HasFormat;
+    use HasEnum;
+    use HasExample;
+    use HasExamples;
 
     protected Type $type;
-    protected ?string $title = null;
     protected ?string $format = null;
     protected mixed $default = null;
-    protected ?array $enum = null;
 
     protected bool $nullable = false;
-    protected bool $readOnly = false;
-    protected bool $writeOnly = false;
-    protected ?string $example = null;
-
-    public function title(string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function format(string $format): static
-    {
-        $this->format = $format;
-
-        return $this;
-    }
 
     public function default($default): static
     {
@@ -46,48 +36,8 @@ abstract class Schema implements Resolvable
         return $this;
     }
 
-    public function enum(array|string $enum): static
+    public function getType(): Type
     {
-        if (is_string($enum)) {
-            $enum = array_map(fn(\BackedEnum $e) => $e->value, $enum::cases());
-        }
-
-        $this->enum = $enum;
-
-        return $this;
-    }
-
-    public function example(string $example): static
-    {
-        $this->example = $example;
-
-        return $this;
-    }
-
-    public function resolve(): array
-    {
-        return [
-            'type'        => $this->type->name,
-            'title'       => $this->title,
-            'format'      => $this->format,
-            'default'     => $this->prepareDefault($this->default),
-            'enum'        => $this->enum,
-            'description' => $this->description,
-            ...$this->additionalFields(),
-        ];
-    }
-
-    protected function additionalFields(): array
-    {
-        return [];
-    }
-
-    protected function prepareDefault($default)
-    {
-        if ($default instanceof self) {
-            return $default->resolve();
-        }
-
-        return $default;
+        return $this->type;
     }
 }

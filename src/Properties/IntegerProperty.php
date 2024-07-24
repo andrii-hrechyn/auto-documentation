@@ -3,7 +3,6 @@
 namespace AutoDocumentation\Properties;
 
 use AutoDocumentation\Schemas\IntegerSchema;
-use AutoDocumentation\Schemas\Schema;
 
 /**
  * @method self minimum(int $minimum)
@@ -13,8 +12,8 @@ use AutoDocumentation\Schemas\Schema;
  */
 class IntegerProperty extends PrimitiveProperty
 {
-    protected static function schema(): Schema
+    public static function make(string $name): static
     {
-        return IntegerSchema::make();
+        return new static($name, IntegerSchema::make());
     }
 }

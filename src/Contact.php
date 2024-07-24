@@ -2,21 +2,27 @@
 
 namespace AutoDocumentation;
 
+use AutoDocumentation\Traits\HasName;
+use AutoDocumentation\Traits\HasUrl;
+
 class Contact
 {
-    public function __construct(
-        protected readonly string $name = '',
-        protected readonly string $email = '',
-        protected readonly string $url = ''
-    ) {
+    use HasName;
+    use HasUrl;
+
+    protected string $email;
+
+    public function email(string $email): static
+    {
+        //todo add email check
+
+        $this->email = $email;
+
+        return $this;
     }
 
-    public function toArray(): array
+    public function getEmail(): string
     {
-        return [
-            'name'  => $this->name,
-            'email' => $this->email,
-            'url'   => $this->url,
-        ];
+        return $this->email;
     }
 }

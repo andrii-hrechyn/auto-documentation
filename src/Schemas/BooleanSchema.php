@@ -6,8 +6,8 @@ use AutoDocumentation\Enums\Type;
 
 class BooleanSchema extends PrimitiveSchema
 {
-    protected function getType(): Type
+    public function __construct()
     {
-        return Type::boolean;
+        $this->type = Type::BOOLEAN;
     }
 }

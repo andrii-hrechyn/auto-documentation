@@ -2,10 +2,15 @@
 
 namespace AutoDocumentation\Enums;
 
-enum ComponentType
+enum ComponentType: string
 {
-    case parameters;
-    case schemas;
-    case responses;
-    case securitySchemes;
+    case SCHEMA = 'schemas';
+    case RESPONSE = 'responses';
+    case PARAMETER = 'parameters';
+    case EXAMPLES = 'examples';
+    case REQUEST = 'requestBodies';
+    case HEADER = 'headers';
+    case SECURITY = 'securitySchemes';
+    case LINKS = 'links';
+    case CALLBACKS = 'callbacks';
 }

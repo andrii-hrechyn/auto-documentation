@@ -2,24 +2,21 @@
 
 namespace AutoDocumentation;
 
+use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasUrl;
+
 class ExternalDocs
 {
-    public static function make(string $url, string $description = ''): self
+    use HasUrl;
+    use HasDescription;
+
+    public function __construct(string $url)
     {
-        return new self($url, $description);
+        $this->url($url);
     }
 
-    private function __construct(
-        protected readonly string $url,
-        protected readonly string $description = ''
-    ) {
-    }
-
-    public function toArray(): array
+    public function make(string $url): static
     {
-        return [
-            'url'         => $this->url,
-            'description' => $this->description,
-        ];
+        return new static($url);
     }
 }

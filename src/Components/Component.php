@@ -2,40 +2,22 @@
 
 namespace AutoDocumentation\Components;
 
-use AutoDocumentation\ComponentsRegistry;
-use AutoDocumentation\Contracts\Component as ComponentInterface;
-use AutoDocumentation\Contracts\Resolvable;
 use AutoDocumentation\Enums\ComponentType;
-use AutoDocumentation\Reference;
+use Illuminate\Support\Str;
 
-abstract class Component implements ComponentInterface, Resolvable
+abstract class Component
 {
-    public static function make(): static
+    public function ref(): string
     {
-        return new static();
+        return "#/components/{$this->type()->value}/{$this->getName()}";
     }
 
-    public function __construct()
+    public function getName(): string
     {
-        ComponentsRegistry::set($this);
-    }
-
-    public function name(): string
-    {
-        return str_replace('\\', '', get_class($this));
+        return Str::of(static::class)->afterLast('\\')->replace('Component', '');
     }
 
     abstract public function type(): ComponentType;
 
-    abstract public function content(): Resolvable;
-
-    public function reference(): Reference
-    {
-        return Reference::make("#/components/{$this->type()->name}/{$this->name()}");
-    }
-
-    public function resolve(): array
-    {
-        return $this->reference()->resolve();
-    }
+    abstract public function content();
 }
