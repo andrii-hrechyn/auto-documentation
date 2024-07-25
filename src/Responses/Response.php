@@ -5,8 +5,9 @@ namespace AutoDocumentation\Responses;
 use AutoDocumentation\Traits\HasContent;
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasName;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Response
+class Response implements Arrayable
 {
     use HasName;
     use HasDescription;
@@ -20,5 +21,13 @@ class Response
     public static function make(int $statusCode): static
     {
         return new static($statusCode);
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'description' => $this->getDescription(),
+            'content'     => $this->getContent()->toArray(),
+        ];
     }
 }

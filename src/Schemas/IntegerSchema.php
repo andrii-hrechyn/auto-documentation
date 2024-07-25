@@ -37,4 +37,13 @@ class IntegerSchema extends PrimitiveSchema
     {
         return $this->minimum;
     }
+
+    public function toArray(): array
+    {
+        return [
+            ...parent::toArray(),
+            'minimum' => $this->getMinimum(),
+            'maximum' => $this->getMaximum(),
+        ];
+    }
 }

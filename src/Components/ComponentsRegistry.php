@@ -2,15 +2,27 @@
 
 namespace AutoDocumentation\Components;
 
-use Illuminate\Support\Collection;
-
 class ComponentsRegistry
 {
     protected array $components = [];
+    protected static ?self $instance = null;
 
-    public function register(Component $component, array $resolvedComponent): static
+    private function __construct()
     {
-        $this->components[$component->type()->value][$component->getName()] = $resolvedComponent;
+    }
+
+    public static function instance(): self
+    {
+        if (self::$instance) {
+            return self::$instance;
+        }
+
+        return self::$instance = new self();
+    }
+
+    public function register(Component $component): static
+    {
+        $this->components[$component->type()->value][$component->getName()] = $component->content()->toArray();
 
         return $this;
     }
@@ -18,10 +30,5 @@ class ComponentsRegistry
     public function toArray(): array
     {
         return $this->components;
-    }
-
-    public function toLaravelCollection(): Collection
-    {
-        return collect($this->components);
     }
 }

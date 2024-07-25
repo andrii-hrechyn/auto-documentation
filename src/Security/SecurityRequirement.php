@@ -13,5 +13,12 @@ abstract class SecurityRequirement extends SimpleComponent
         return ComponentType::SECURITY;
     }
 
+    public function toArray(): array
+    {
+        return [
+            $this->getName() => [],
+        ];
+    }
+
     abstract public function content(): SecurityScheme;
 }

@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Traits;
 
 use AutoDocumentation\Tag;
+use Illuminate\Support\Collection;
 
 trait HasTags
 {
@@ -22,8 +23,8 @@ trait HasTags
         return $this;
     }
 
-    public function getTags(): array
+    public function getTags(): Collection
     {
-        return $this->tags;
+        return collect($this->tags);
     }
 }

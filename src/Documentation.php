@@ -2,17 +2,18 @@
 
 namespace AutoDocumentation;
 
-use AutoDocumentation\OpenApi as OpenApiAlias;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 class Documentation
 {
     protected Filesystem $filesystem;
+    protected Normalizer $normalizer;
 
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, Normalizer $normalizer)
     {
         $this->filesystem = $filesystem;
+        $this->normalizer = $normalizer;
     }
 
     public function generate($a): void
@@ -27,15 +28,15 @@ class Documentation
         (new Loader($this->filesystem))->load($documentationPath);
     }
 
-    public function store(OpenApiAlias $api, string $path): void
+    public function store(OpenApi $api, string $path): void
     {
         $this->filesystem->ensureDirectoryExists(dirname($path));
 
         $this->filesystem->put($path, $this->generateYaml($api));
     }
 
-    public function generateYaml(OpenApiAlias $api): string
+    public function generateYaml(OpenApi $api): string
     {
-        return Yaml::dump($api->generate(), 25, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
+        return Yaml::dump($this->normalizer->normalize($api->toArray()), 25, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
     }
 }

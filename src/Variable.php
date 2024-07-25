@@ -5,8 +5,9 @@ namespace AutoDocumentation;
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasEnum;
 use AutoDocumentation\Traits\HasName;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Variable
+class Variable implements Arrayable
 {
     use HasName;
     use HasEnum;
@@ -28,5 +29,14 @@ class Variable
     public function getDefault(): string|int|float|bool|null
     {
         return $this->default;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'default'     => $this->getDefault(),
+            'enum'        => $this->getEnum(),
+            'description' => $this->getDescription(),
+        ];
     }
 }

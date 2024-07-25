@@ -37,4 +37,13 @@ class StringSchema extends PrimitiveSchema
     {
         return $this->minLength;
     }
+
+    public function toArray(): array
+    {
+        return [
+            ...parent::toArray(),
+            'minLength' => $this->getMinLength(),
+            'maxLength' => $this->getMaxLength(),
+        ];
+    }
 }

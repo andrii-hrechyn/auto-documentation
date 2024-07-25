@@ -11,8 +11,9 @@ use AutoDocumentation\Traits\HasExample;
 use AutoDocumentation\Traits\HasExamples;
 use AutoDocumentation\Traits\HasName;
 use AutoDocumentation\Traits\HasRequired;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Parameter
+class Parameter implements Arrayable
 {
     use HasName;
     use HasDescription;
@@ -77,5 +78,19 @@ class Parameter
     public function getStyle(): ParameterStyle
     {
         return $this->style;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name'            => $this->getName(),
+            'in'              => $this->getIn()->value,
+            'description'     => $this->getDescription(),
+            'required'        => $this->isRequired(),
+            'deprecated'      => $this->isDeprecated(),
+            'allowEmptyValue' => $this->isAllowEmptyValue(),
+            'example'         => $this->getExample(),
+            'examples'        => $this->getExamples(),
+        ];
     }
 }

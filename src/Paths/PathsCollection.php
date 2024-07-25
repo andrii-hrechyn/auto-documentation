@@ -2,11 +2,17 @@
 
 namespace AutoDocumentation\Paths;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 
-class PathsCollection
+class PathsCollection implements Arrayable
 {
-    protected array $paths = [];
+    protected Collection $paths;
+
+    public function __construct()
+    {
+        $this->paths = new Collection();
+    }
 
     public function add(Path $path): static
     {
@@ -17,11 +23,6 @@ class PathsCollection
 
     public function toArray(): array
     {
-        return $this->paths;
-    }
-
-    public function toLaravelCollection(): Collection
-    {
-        return collect($this->paths);
+        return $this->paths->toArray();
     }
 }

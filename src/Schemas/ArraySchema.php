@@ -63,6 +63,17 @@ class ArraySchema extends Schema
         return $this->items;
     }
 
+    public function toArray(): array
+    {
+        return [
+            ...parent::toArray(),
+            'maxItems'    => $this->getMaxItems(),
+            'minItems'    => $this->getMinItems(),
+            'uniqueItems' => $this->isUnique(),
+            'items'       => $this->getItems()->toArray(),
+        ];
+    }
+
 //    protected function additionalFields(): array
 //    {
 //        return [

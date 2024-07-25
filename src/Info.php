@@ -4,9 +4,10 @@ namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasTitle;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 
-class Info
+class Info implements Arrayable
 {
     use HasTitle;
     use HasDescription;
@@ -80,5 +81,17 @@ class Info
     public function getLicense(): ?License
     {
         return $this->license;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'title'          => $this->getTitle(),
+            'description'    => $this->getDescription(),
+            'termsOfService' => $this->getTermsOfService(),
+            'contact'        => $this->getContact(),
+            'license'        => $this->getLicense(),
+            'version'        => $this->getVersion(),
+        ];
     }
 }

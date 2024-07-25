@@ -16,7 +16,10 @@ class ObjectSchema extends Schema
     public function __construct(array $properties = [])
     {
         $this->type = Type::OBJECT;
-        $this->properties = $properties;
+
+        foreach ($properties as $property) {
+            $this->add($property);
+        }
     }
 
     /**
@@ -31,7 +34,7 @@ class ObjectSchema extends Schema
 
     public function add(Property $property): static
     {
-        $this->properties[] = $property;
+        $this->properties[$property->getName()] = $property;
 
         return $this;
     }
@@ -46,5 +49,13 @@ class ObjectSchema extends Schema
     public function getProperties(): Collection
     {
         return collect($this->properties);
+    }
+
+    public function toArray(): array
+    {
+        return [
+            ...parent::toArray(),
+            'properties' => $this->getProperties()->toArray(),
+        ];
     }
 }

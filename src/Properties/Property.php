@@ -2,11 +2,11 @@
 
 namespace AutoDocumentation\Properties;
 
-use AutoDocumentation\JsonSchema;
 use AutoDocumentation\Schemas\Schema;
 use AutoDocumentation\Traits\HasName;
 use AutoDocumentation\Traits\HasRequired;
 use AutoDocumentation\Traits\HasSchema;
+use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * @method self title(string $title)
@@ -18,7 +18,7 @@ use AutoDocumentation\Traits\HasSchema;
  *
  * @see Schema
  */
-class Property extends JsonSchema
+class Property implements Arrayable
 {
     use HasName;
     use HasRequired;
@@ -28,6 +28,11 @@ class Property extends JsonSchema
     {
         $this->name($name);
         $this->schema($schema);
+    }
+
+    public function toArray(): array
+    {
+        return $this->schema->toArray();
     }
 
     public function __call(string $method, array $arguments): static

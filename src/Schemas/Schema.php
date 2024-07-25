@@ -11,8 +11,9 @@ use AutoDocumentation\Traits\HasExamples;
 use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\HasFormat;
 use AutoDocumentation\Traits\HasTitle;
+use Illuminate\Contracts\Support\Arrayable;
 
-abstract class Schema
+abstract class Schema implements Arrayable
 {
     use HasTitle;
     use HasDescription;
@@ -39,5 +40,18 @@ abstract class Schema
     public function getType(): Type
     {
         return $this->type;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'type'        => $this->getType()->value,
+            'title'       => $this->getTitle(),
+            'format'      => $this->getFormat(),
+//            'default'     => $this->prepareDefault($this->default),
+            'enum'        => $this->getEnum(),
+            'description' => $this->getDescription(),
+            'example'     => $this->getExample(),
+        ];
     }
 }

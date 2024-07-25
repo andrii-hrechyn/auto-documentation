@@ -5,6 +5,7 @@ namespace AutoDocumentation\Paths;
 use AutoDocumentation\Components\ResponseComponent;
 use AutoDocumentation\Request;
 use AutoDocumentation\Responses\Response;
+use AutoDocumentation\Responses\ResponsesCollection;
 use AutoDocumentation\Traits\HasDeprecated;
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasExternalDocs;
@@ -13,9 +14,9 @@ use AutoDocumentation\Traits\HasSecurity;
 use AutoDocumentation\Traits\HasServers;
 use AutoDocumentation\Traits\HasSummary;
 use AutoDocumentation\Traits\HasTags;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Method
+class Method implements Arrayable
 {
     use HasDescription;
     use HasSummary;
@@ -33,7 +34,7 @@ class Method
     protected ?string $operationId = null;
 
     protected ?Request $request = null;
-    protected array $responses = [];
+    protected ResponsesCollection $responses;
 
     public function __construct(string $method)
     {
@@ -42,6 +43,7 @@ class Method
         }
 
         $this->method = $method;
+        $this->responses = new ResponsesCollection();
     }
 
     public static function make(string $method): static
@@ -80,7 +82,7 @@ class Method
 
     public function response(Response|ResponseComponent $response): static
     {
-        $this->responses[] = $response;
+        $this->responses->add($response);
 
         return $this;
     }
@@ -94,8 +96,25 @@ class Method
         return $this;
     }
 
-    public function getResponses(): Collection
+    public function getResponses(): ResponsesCollection
     {
-        return collect($this->responses);
+        return $this->responses;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'tags'         => $this->getTags()->toArray(),
+            'summary'      => $this->getSummary(),
+            'description'  => $this->getDescription(),
+            'externalDocs' => $this->getExternalDocs(),
+            'operationId'  => $this->getOperationId(),
+            'parameters'   => $this->getParameters()->values()->toArray(),
+            'requestBody'  => $this->getRequest()->toArray(),
+            'responses'    => $this->getResponses()->toArray(),
+            'deprecated'   => $this->isDeprecated(),
+            'security'     => $this->getSecurity()->toArray(),
+            'servers'      => $this->getServers()->values()->toArray(),
+        ];
     }
 }

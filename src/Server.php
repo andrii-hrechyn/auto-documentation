@@ -4,8 +4,9 @@ namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasVariables;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Server
+class Server implements Arrayable
 {
     use HasVariables;
     use HasDescription;
@@ -32,5 +33,14 @@ class Server
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'url'         => $this->getUrl(),
+            'description' => $this->getDescription(),
+            'variables'   => $this->getVariables()->toArray(),
+        ];
     }
 }

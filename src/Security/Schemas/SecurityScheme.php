@@ -2,10 +2,10 @@
 
 namespace AutoDocumentation\Security\Schemas;
 
-use AutoDocumentation\Contracts\Arrayable;
 use AutoDocumentation\Enums\SecuritySchemeType;
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasName;
+use Illuminate\Contracts\Support\Arrayable;
 
 abstract class SecurityScheme implements Arrayable
 {

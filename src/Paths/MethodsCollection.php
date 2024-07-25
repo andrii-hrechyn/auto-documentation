@@ -22,11 +22,6 @@ class MethodsCollection
 
     public function toArray(): array
     {
-        return $this->methods->values();
-    }
-
-    public function toLaravelCollection(): Collection
-    {
-        return collect($this->methods);
+        return $this->methods->toArray();
     }
 }

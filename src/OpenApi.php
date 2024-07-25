@@ -2,6 +2,7 @@
 
 namespace AutoDocumentation;
 
+use AutoDocumentation\Components\ComponentsRegistry;
 use AutoDocumentation\Paths\PathsCollection;
 use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\HasSecurity;
@@ -53,8 +54,17 @@ class OpenApi
         return $this->paths;
     }
 
-    public function generate(): array
+    public function toArray(): array
     {
-        return (new Converter())->convert($this);
+        return [
+            'openapi'      => static::OPEN_API_VERSION,
+            'info'         => $this->getInfo()->toArray(),
+            'servers'      => $this->getServers()->values()->toArray(),
+            'security'     => $this->getSecurity()->toArray(),
+            'tags'         => $this->getTags()->toArray(),
+            'externalDocs' => $this->getExternalDocs()?->toArray(),
+            'paths'        => $this->getPaths()->toArray(),
+            'components'   => ComponentsRegistry::instance()->toArray(),
+        ];
     }
 }

@@ -6,8 +6,9 @@ use AutoDocumentation\Traits\HasExample;
 use AutoDocumentation\Traits\HasExamples;
 use AutoDocumentation\Traits\HasName;
 use AutoDocumentation\Traits\HasSchema;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Content
+class Content implements Arrayable
 {
     use HasName;
     use HasExample;
@@ -22,5 +23,12 @@ class Content
     public static function make(string $contentType): static
     {
         return new static($contentType);
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'schema' => $this->getSchema()->toArray(),
+        ];
     }
 }

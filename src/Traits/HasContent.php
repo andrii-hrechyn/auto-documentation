@@ -2,21 +2,21 @@
 
 namespace AutoDocumentation\Traits;
 
-use Illuminate\Support\Collection;
+use AutoDocumentation\ContentCollection;
 
 trait HasContent
 {
-    protected array $content = [];
+    protected ContentCollection $content;
 
-    public function content(array $content): static
+    public function content(array|ContentCollection $content): static
     {
-        $this->content = $content;
+        $this->content = is_array($content) ? new ContentCollection($content) : $content;
 
         return $this;
     }
 
-    public function getContent(): Collection
+    public function getContent(): ContentCollection
     {
-        return collect($this->content);
+        return $this->content ?? new ContentCollection();
     }
 }
