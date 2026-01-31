@@ -17,7 +17,7 @@ class Normalizer
     {
         return collect($array)
             ->map(function ($value, string $key) {
-                if (in_array($key, $this->ignoreEmptyValueFiltering)) {
+                if (in_array($key, $this->ignoreEmptyValueFiltering) || str_starts_with($key, 'x-')) {
                     return $value;
                 }
 
@@ -27,6 +27,6 @@ class Normalizer
 
                 return $value;
             })
-            ->filter(fn($value) => $value)->all();
+            ->filter(fn($value, $key) => $value || str_starts_with((string) $key, 'x-'))->all();
     }
 }

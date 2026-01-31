@@ -3,6 +3,7 @@
 namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasName;
 use AutoDocumentation\Traits\HasSummary;
 
@@ -11,6 +12,7 @@ class Example
     use HasName;
     use HasDescription;
     use HasSummary;
+    use HasExtensions;
 
     protected mixed $value = null;
 

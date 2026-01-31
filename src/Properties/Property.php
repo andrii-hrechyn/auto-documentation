@@ -15,6 +15,7 @@ use Illuminate\Contracts\Support\Arrayable;
  * @method self default($default)
  * @method self description(string $description)
  * @method self example(string $example)
+ * @method self extension(string $name, mixed $value)
  *
  * @see Schema
  */

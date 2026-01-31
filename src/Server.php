@@ -3,6 +3,7 @@
 namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasVariables;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -10,6 +11,7 @@ class Server implements Arrayable
 {
     use HasVariables;
     use HasDescription;
+    use HasExtensions;
 
     protected string $url;
 
@@ -41,6 +43,7 @@ class Server implements Arrayable
             'url'         => $this->getUrl(),
             'description' => $this->getDescription(),
             'variables'   => $this->getVariables()->toArray(),
+            ...$this->getExtensions(),
         ];
     }
 }

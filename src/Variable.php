@@ -4,6 +4,7 @@ namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasEnum;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasName;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -12,6 +13,7 @@ class Variable implements Arrayable
     use HasName;
     use HasEnum;
     use HasDescription;
+    use HasExtensions;
 
     protected string|int|float|bool $default;
 
@@ -37,6 +39,7 @@ class Variable implements Arrayable
             'default'     => $this->getDefault(),
             'enum'        => $this->getEnum(),
             'description' => $this->getDescription(),
+            ...$this->getExtensions(),
         ];
     }
 }

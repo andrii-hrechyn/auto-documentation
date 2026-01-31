@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Paths;
 
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasParameters;
 use AutoDocumentation\Traits\HasServers;
 use AutoDocumentation\Traits\HasSummary;
@@ -14,6 +15,7 @@ class Path implements Arrayable
     use HasDescription;
     use HasServers;
     use HasParameters;
+    use HasExtensions;
 
     protected string $path;
 
@@ -65,6 +67,7 @@ class Path implements Arrayable
             'description' => $this->getDescription(),
             'servers'     => $this->getServers()->values()->toArray(),
             'parameters'  => $this->getParameters()->values()->toArray(),
+            ...$this->getExtensions(),
         ];
     }
 

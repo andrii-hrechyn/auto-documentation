@@ -3,6 +3,7 @@
 namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasTitle;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
@@ -11,6 +12,7 @@ class Info implements Arrayable
 {
     use HasTitle;
     use HasDescription;
+    use HasExtensions;
 
     protected string $version;
 
@@ -92,6 +94,7 @@ class Info implements Arrayable
             'contact'        => $this->getContact(),
             'license'        => $this->getLicense(),
             'version'        => $this->getVersion(),
+            ...$this->getExtensions(),
         ];
     }
 }

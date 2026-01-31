@@ -5,6 +5,7 @@ namespace AutoDocumentation;
 use AutoDocumentation\Components\ComponentsRegistry;
 use AutoDocumentation\Paths\Path;
 use AutoDocumentation\Paths\PathsCollection;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\HasSecurity;
 use AutoDocumentation\Traits\HasServers;
@@ -16,6 +17,7 @@ class OpenApi
     use HasExternalDocs;
     use HasTags;
     use HasSecurity;
+    use HasExtensions;
 
     public const OPEN_API_VERSION = '3.1.0';
 
@@ -73,6 +75,7 @@ class OpenApi
             'externalDocs' => $this->getExternalDocs()?->toArray(),
             'paths'        => $this->getPaths()->toArray(),
             'components'   => ComponentsRegistry::instance()->toArray(),
+            ...$this->getExtensions(),
         ];
     }
 }

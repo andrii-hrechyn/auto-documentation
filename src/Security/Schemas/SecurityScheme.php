@@ -4,6 +4,7 @@ namespace AutoDocumentation\Security\Schemas;
 
 use AutoDocumentation\Enums\SecuritySchemeType;
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasName;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -11,6 +12,7 @@ abstract class SecurityScheme implements Arrayable
 {
     use HasName;
     use HasDescription;
+    use HasExtensions;
 
     protected SecuritySchemeType $type;
 
@@ -21,6 +23,7 @@ abstract class SecurityScheme implements Arrayable
         return [
             'type'        => $this->type->value,
             'description' => $this->description,
+            ...$this->getExtensions(),
         ];
     }
 }

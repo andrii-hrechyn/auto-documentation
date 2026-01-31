@@ -9,6 +9,7 @@ use AutoDocumentation\Traits\HasDeprecated;
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasExample;
 use AutoDocumentation\Traits\HasExamples;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasName;
 use AutoDocumentation\Traits\HasRequired;
 use Illuminate\Contracts\Support\Arrayable;
@@ -23,6 +24,7 @@ class Parameter implements Arrayable
     use HasExample;
     use HasExamples;
     use HasRequired;
+    use HasExtensions;
 
     protected ParameterIn $in;
 
@@ -91,6 +93,7 @@ class Parameter implements Arrayable
             'allowEmptyValue' => $this->isAllowEmptyValue(),
             'example'         => $this->getExample(),
             'examples'        => $this->getExamples(),
+            ...$this->getExtensions(),
         ];
     }
 }

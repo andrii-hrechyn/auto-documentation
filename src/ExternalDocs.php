@@ -3,6 +3,7 @@
 namespace AutoDocumentation;
 
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasUrl;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -10,6 +11,7 @@ class ExternalDocs implements Arrayable
 {
     use HasUrl;
     use HasDescription;
+    use HasExtensions;
 
     public function __construct(string $url)
     {
@@ -26,6 +28,7 @@ class ExternalDocs implements Arrayable
         return [
             'url'         => $this->getUrl(),
             'description' => $this->getDescription(),
+            ...$this->getExtensions(),
         ];
     }
 }

@@ -8,6 +8,7 @@ use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasEnum;
 use AutoDocumentation\Traits\HasExample;
 use AutoDocumentation\Traits\HasExamples;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\HasFormat;
 use AutoDocumentation\Traits\HasTitle;
@@ -23,6 +24,7 @@ abstract class Schema implements Arrayable
     use HasEnum;
     use HasExample;
     use HasExamples;
+    use HasExtensions;
 
     protected Type $type;
     protected ?string $format = null;
@@ -52,6 +54,7 @@ abstract class Schema implements Arrayable
             'enum'        => $this->getEnum(),
             'description' => $this->getDescription(),
             'example'     => $this->getExample(),
+            ...$this->getExtensions(),
         ];
     }
 }

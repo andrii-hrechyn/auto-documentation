@@ -10,6 +10,7 @@ use AutoDocumentation\Responses\ResponsesCollection;
 use AutoDocumentation\Schemas\Schema;
 use AutoDocumentation\Traits\HasDeprecated;
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\HasParameters;
 use AutoDocumentation\Traits\HasSecurity;
@@ -28,6 +29,7 @@ class Method implements Arrayable
     use HasParameters;
     use HasTags;
     use HasSecurity;
+    use HasExtensions;
 
     protected array $availableMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
 
@@ -126,6 +128,7 @@ class Method implements Arrayable
             'deprecated'   => $this->isDeprecated(),
             'security'     => $this->getSecurity()?->toArray(),
             'servers'      => $this->getServers()->values()->toArray(),
+            ...$this->getExtensions(),
         ];
     }
 }

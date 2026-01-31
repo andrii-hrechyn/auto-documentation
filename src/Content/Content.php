@@ -4,6 +4,7 @@ namespace AutoDocumentation\Content;
 
 use AutoDocumentation\Traits\HasExample;
 use AutoDocumentation\Traits\HasExamples;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasName;
 use AutoDocumentation\Traits\HasSchema;
 use Illuminate\Contracts\Support\Arrayable;
@@ -14,6 +15,7 @@ class Content implements Arrayable
     use HasExample;
     use HasExamples;
     use HasSchema;
+    use HasExtensions;
 
     public function __construct(string $contentType)
     {
@@ -29,6 +31,7 @@ class Content implements Arrayable
     {
         return [
             'schema' => $this->getSchema()->toArray(),
+            ...$this->getExtensions(),
         ];
     }
 }
