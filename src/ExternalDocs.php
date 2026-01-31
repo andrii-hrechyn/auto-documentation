@@ -16,7 +16,7 @@ class ExternalDocs implements Arrayable
         $this->url($url);
     }
 
-    public function make(string $url): static
+    public static function make(string $url): static
     {
         return new static($url);
     }

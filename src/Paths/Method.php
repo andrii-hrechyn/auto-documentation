@@ -3,9 +3,11 @@
 namespace AutoDocumentation\Paths;
 
 use AutoDocumentation\Components\ResponseComponent;
-use AutoDocumentation\Request;
+use AutoDocumentation\Content\ApplicationJson;
+use AutoDocumentation\Requests\Request;
 use AutoDocumentation\Responses\Response;
 use AutoDocumentation\Responses\ResponsesCollection;
+use AutoDocumentation\Schemas\Schema;
 use AutoDocumentation\Traits\HasDeprecated;
 use AutoDocumentation\Traits\HasDescription;
 use AutoDocumentation\Traits\HasExternalDocs;
@@ -38,6 +40,8 @@ class Method implements Arrayable
 
     public function __construct(string $method)
     {
+        $method = strtolower($method);
+
         if (!in_array($method, $this->availableMethods)) {
             //todo throw exception
         }
@@ -71,6 +75,13 @@ class Method implements Arrayable
     public function request(Request $request): static
     {
         $this->request = $request;
+
+        return $this;
+    }
+
+    public function jsonRequest(Schema $schema): static
+    {
+        $this->request = Request::make()->content([ApplicationJson::make($schema)]);
 
         return $this;
     }
@@ -110,10 +121,10 @@ class Method implements Arrayable
             'externalDocs' => $this->getExternalDocs(),
             'operationId'  => $this->getOperationId(),
             'parameters'   => $this->getParameters()->values()->toArray(),
-            'requestBody'  => $this->getRequest()->toArray(),
+            'requestBody'  => $this->getRequest()?->toArray(),
             'responses'    => $this->getResponses()->toArray(),
             'deprecated'   => $this->isDeprecated(),
-            'security'     => $this->getSecurity()->toArray(),
+            'security'     => $this->getSecurity()?->toArray(),
             'servers'      => $this->getServers()->values()->toArray(),
         ];
     }

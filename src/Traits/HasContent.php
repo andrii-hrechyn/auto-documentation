@@ -2,15 +2,19 @@
 
 namespace AutoDocumentation\Traits;
 
-use AutoDocumentation\ContentCollection;
+use AutoDocumentation\Content\Content;
+use AutoDocumentation\Content\ContentCollection;
+use Illuminate\Support\Arr;
 
 trait HasContent
 {
     protected ContentCollection $content;
 
-    public function content(array|ContentCollection $content): static
+    public function content(array|Content|ContentCollection $content): static
     {
-        $this->content = is_array($content) ? new ContentCollection($content) : $content;
+        $this->content = $content instanceof ContentCollection
+            ? $content
+            : new ContentCollection(Arr::wrap($content));
 
         return $this;
     }

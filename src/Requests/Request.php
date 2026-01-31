@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoDocumentation;
+namespace AutoDocumentation\Requests;
 
 use AutoDocumentation\Traits\HasContent;
 use AutoDocumentation\Traits\HasDescription;
@@ -21,7 +21,9 @@ class Request implements Arrayable
     public function toArray(): array
     {
         return [
-            'content' => $this->content->toArray(),
+            'required'    => $this->required,
+            'description' => $this->description,
+            'content'     => $this->content->toArray(),
         ];
     }
 }

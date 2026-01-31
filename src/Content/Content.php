@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoDocumentation;
+namespace AutoDocumentation\Content;
 
 use AutoDocumentation\Traits\HasExample;
 use AutoDocumentation\Traits\HasExamples;

@@ -8,4 +8,9 @@ abstract class SimpleComponent extends Component
     {
         return new static();
     }
+
+    public function __construct()
+    {
+        $this->register();
+    }
 }

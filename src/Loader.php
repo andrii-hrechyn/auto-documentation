@@ -14,13 +14,13 @@ class Loader
 
     public function load(string $documentationSourcePath): void
     {
-        $documentationSourcePath = rtrim($documentationSourcePath, '/');
-
-        if (!$this->filesystem->isDirectory($documentationSourcePath)) {
-            throw new AutoDocumentationException("$documentationSourcePath doest not exist.It needs to be directory with documentations");
-        }
-
-        $this->loadInfo($documentationSourcePath);
+//        $documentationSourcePath = rtrim($documentationSourcePath, '/');
+//
+//        if (!$this->filesystem->isDirectory($documentationSourcePath)) {
+//            throw new AutoDocumentationException("$documentationSourcePath doest not exist.It needs to be directory with documentations");
+//        }
+//
+//        $this->loadInfo($documentationSourcePath);
         $this->loadPaths($documentationSourcePath);
     }
 
@@ -38,7 +38,7 @@ class Loader
     private function loadPaths(string $path): void
     {
         foreach ($this->filesystem->allFiles($path.'/Paths') as $file) {
-            require $file->getPathname();
+            dd($file->getPathname());
         }
     }
 }

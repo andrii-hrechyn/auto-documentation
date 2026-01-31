@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoDocumentation;
+namespace AutoDocumentation\Content;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;

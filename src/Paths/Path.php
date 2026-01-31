@@ -3,6 +3,7 @@
 namespace AutoDocumentation\Paths;
 
 use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasParameters;
 use AutoDocumentation\Traits\HasServers;
 use AutoDocumentation\Traits\HasSummary;
 use Illuminate\Contracts\Support\Arrayable;
@@ -12,6 +13,7 @@ class Path implements Arrayable
     use HasSummary;
     use HasDescription;
     use HasServers;
+    use HasParameters;
 
     protected string $path;
 
@@ -19,7 +21,7 @@ class Path implements Arrayable
 
     public function __construct(string $path)
     {
-        $this->path = $path;
+        $this->path = $this->normalize($path);
 
         $this->methods = new MethodsCollection();
     }
@@ -62,8 +64,12 @@ class Path implements Arrayable
             'summary'     => $this->getSummary(),
             'description' => $this->getDescription(),
             'servers'     => $this->getServers()->values()->toArray(),
-            //todo add parameters
-//            'parameters'
+            'parameters'  => $this->getParameters()->values()->toArray(),
         ];
+    }
+
+    private function normalize(string $path): string
+    {
+        return '/'.ltrim($path, '/');
     }
 }

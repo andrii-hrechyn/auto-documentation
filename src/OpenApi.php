@@ -3,6 +3,7 @@
 namespace AutoDocumentation;
 
 use AutoDocumentation\Components\ComponentsRegistry;
+use AutoDocumentation\Paths\Path;
 use AutoDocumentation\Paths\PathsCollection;
 use AutoDocumentation\Traits\HasExternalDocs;
 use AutoDocumentation\Traits\HasSecurity;
@@ -40,10 +41,17 @@ class OpenApi
         return $this->info;
     }
 
+    public function path(Path $path): static
+    {
+        $this->paths->add($path);
+
+        return $this;
+    }
+
     public function paths(array $paths): static
     {
         foreach ($paths as $path) {
-            $this->paths->add($path);
+            $this->path($path);
         }
 
         return $this;

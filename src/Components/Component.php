@@ -22,10 +22,13 @@ abstract class Component implements Arrayable
 
     abstract public function content();
 
-    public function toArray(): array
+    protected function register(): void
     {
         ComponentsRegistry::instance()->register($this);
+    }
 
+    public function toArray(): array
+    {
         return [
             '$ref' => $this->ref(),
         ];

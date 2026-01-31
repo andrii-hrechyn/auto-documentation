@@ -3,7 +3,7 @@
 namespace AutoDocumentation\Components;
 
 use AutoDocumentation\Enums\ComponentType;
-use AutoDocumentation\Request;
+use AutoDocumentation\Requests\Request;
 
 abstract class RequestComponent extends SimpleComponent
 {

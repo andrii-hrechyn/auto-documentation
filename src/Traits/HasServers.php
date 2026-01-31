@@ -19,6 +19,10 @@ trait HasServers
     public function servers(array $servers): static
     {
         foreach ($servers as $server) {
+            if (!$server instanceof Server) {
+                throw new \Exception('Server object must implement '.Server::class);
+            }
+
             $this->server($server);
         }
 
