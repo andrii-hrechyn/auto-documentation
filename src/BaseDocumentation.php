@@ -33,20 +33,9 @@ abstract class BaseDocumentation
     {
     }
 
-    public function paths()
-    {
-        return doc_path('Paths');
-    }
-
     protected function loadPaths(string $path)
     {
-
-//        dump(doc_path($path), 'Docs\\Paths');
-
         $this->discoverPaths(doc_path('Paths'), 'Docs\\Paths');
-
-
-//        (new Loader($this->filesystem))->load(doc_path());
     }
 
     public function discoverPaths(string $in, string $for): static

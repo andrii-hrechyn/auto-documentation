@@ -18,14 +18,7 @@ class Documentation
 
     public function generate($a): void
     {
-//        $this->loadPaths(config('auto-documentation.paths.source'));
-
         $this->store($a, config('auto-documentation.paths.generated-doc').'/documentation.yaml');
-    }
-
-    public function loadPaths(string $documentationPath)
-    {
-        (new Loader($this->filesystem))->load($documentationPath);
     }
 
     public function store(OpenApi $api, string $path): void
