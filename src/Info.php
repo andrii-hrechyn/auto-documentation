@@ -87,14 +87,14 @@ class Info implements Arrayable
 
     public function toArray(): array
     {
-        return [
+        return array_filter([
             'title'          => $this->getTitle(),
             'description'    => $this->getDescription(),
             'termsOfService' => $this->getTermsOfService(),
-            'contact'        => $this->getContact(),
-            'license'        => $this->getLicense(),
+            'contact'        => $this->getContact()?->toArray(),
+            'license'        => $this->getLicense()?->toArray(),
             'version'        => $this->getVersion(),
             ...$this->getExtensions(),
-        ];
+        ], fn ($value) => $value !== null);
     }
 }

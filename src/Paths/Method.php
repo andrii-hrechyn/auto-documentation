@@ -7,6 +7,8 @@ use AutoDocumentation\Content\ApplicationJson;
 use AutoDocumentation\Requests\Request;
 use AutoDocumentation\Responses\Response;
 use AutoDocumentation\Responses\ResponsesCollection;
+use AutoDocumentation\Responses\SuccessfulResponse;
+use AutoDocumentation\Schemas\ObjectSchema;
 use AutoDocumentation\Schemas\Schema;
 use AutoDocumentation\Traits\HasDeprecated;
 use AutoDocumentation\Traits\HasDescription;
@@ -81,9 +83,28 @@ class Method implements Arrayable
         return $this;
     }
 
-    public function jsonRequest(Schema $schema): static
+    public function jsonRequest(Schema|array $schema, bool $required = true): static
     {
+        if (is_array($schema)) {
+            $schema = ObjectSchema::make($schema);
+        }
+
         $this->request = Request::make()->content([ApplicationJson::make($schema)]);
+
+        if ($required) {
+            $this->request->required();
+        }
+
+        return $this;
+    }
+
+    public function jsonResponse(array $properties, int $statusCode = 200): static
+    {
+        $this->responses->add(
+            SuccessfulResponse::make($statusCode)->content([
+                ApplicationJson::make(ObjectSchema::make($properties)),
+            ])
+        );
 
         return $this;
     }
@@ -117,10 +138,10 @@ class Method implements Arrayable
     public function toArray(): array
     {
         return [
-            'tags'         => $this->getTags()->toArray(),
+            'tags'         => $this->getTags()->map(fn (\AutoDocumentation\Tag $tag) => $tag->getName())->values()->toArray(),
             'summary'      => $this->getSummary(),
             'description'  => $this->getDescription(),
-            'externalDocs' => $this->getExternalDocs(),
+            'externalDocs' => $this->getExternalDocs()?->toArray(),
             'operationId'  => $this->getOperationId(),
             'parameters'   => $this->getParameters()->values()->toArray(),
             'requestBody'  => $this->getRequest()?->toArray(),

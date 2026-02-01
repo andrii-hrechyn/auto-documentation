@@ -17,11 +17,11 @@ class Tag implements Arrayable
 
     public function toArray(): array
     {
-        return [
+        return array_filter([
             'name'         => $this->getName(),
             'description'  => $this->getDescription(),
-            'externalDocs' => $this->getExternalDocs(),
+            'externalDocs' => $this->getExternalDocs()?->toArray(),
             ...$this->getExtensions(),
-        ];
+        ], fn ($value) => $value !== null);
     }
 }
