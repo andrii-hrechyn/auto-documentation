@@ -2,14 +2,12 @@
 
 namespace AutoDocumentation\Properties;
 
-use AutoDocumentation\Components\SchemaComponent;
-use AutoDocumentation\Helpers\SchemaHelper;
-use AutoDocumentation\Schemas\Schema;
+use AutoDocumentation\Schemas\ObjectSchema;
 
 class ObjectProperty extends Property
 {
-    public static function make(string $name, SchemaComponent|Schema|array $properties): static
+    public static function make(string $name): static
     {
-        return new static($name, SchemaHelper::prepareSchema($properties));
+        return new static($name, ObjectSchema::make());
     }
 }

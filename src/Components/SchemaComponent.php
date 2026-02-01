@@ -4,13 +4,19 @@ namespace AutoDocumentation\Components;
 
 use AutoDocumentation\Enums\ComponentType;
 use AutoDocumentation\Schemas\ObjectSchema;
+use AutoDocumentation\Schemas\Schema;
 
-abstract class SchemaComponent extends Component
+abstract class SchemaComponent extends SimpleComponent
 {
     public function type(): ComponentType
     {
-        return ComponentType::schemas;
+        return ComponentType::SCHEMA;
     }
 
-    abstract public function content(): ObjectSchema;
+    protected function schema(array $properties = []): ObjectSchema
+    {
+        return ObjectSchema::make($properties);
+    }
+
+    abstract public function content(): Schema;
 }

@@ -2,24 +2,33 @@
 
 namespace AutoDocumentation;
 
-class ExternalDocs
+use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
+use AutoDocumentation\Traits\HasUrl;
+use Illuminate\Contracts\Support\Arrayable;
+
+class ExternalDocs implements Arrayable
 {
-    public static function make(string $url, string $description = ''): self
+    use HasUrl;
+    use HasDescription;
+    use HasExtensions;
+
+    public function __construct(string $url)
     {
-        return new self($url, $description);
+        $this->url($url);
     }
 
-    private function __construct(
-        protected readonly string $url,
-        protected readonly string $description = ''
-    ) {
+    public static function make(string $url): static
+    {
+        return new static($url);
     }
 
     public function toArray(): array
     {
         return [
-            'url'         => $this->url,
-            'description' => $this->description,
+            'url'         => $this->getUrl(),
+            'description' => $this->getDescription(),
+            ...$this->getExtensions(),
         ];
     }
 }

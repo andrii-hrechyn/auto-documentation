@@ -2,25 +2,77 @@
 
 namespace AutoDocumentation\Paths;
 
-use AutoDocumentation\OpenApi;
+use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
+use AutoDocumentation\Traits\HasParameters;
+use AutoDocumentation\Traits\HasServers;
+use AutoDocumentation\Traits\HasSummary;
+use Illuminate\Contracts\Support\Arrayable;
 
-/**
- * @method static Path get(string $path, string $summary)
- * @method static Path post(string $path, string $summary)
- * @method static Path patch(string $path, string $summary)
- * @method static Path put(string $path, string $summary)
- * @method static Path delete(string $path, string $summary)
- * @method static Path option(string $path, string $summary)
- */
-class Path extends BasePath
+class Path implements Arrayable
 {
-    public static function make(string $method, string $path, string $summary): Path
+    use HasSummary;
+    use HasDescription;
+    use HasServers;
+    use HasParameters;
+    use HasExtensions;
+
+    protected string $path;
+
+    protected MethodsCollection $methods;
+
+    public function __construct(string $path)
     {
-        return OpenApi::instance()->path(new Path($method, $path, $summary));
+        $this->path = $this->normalize($path);
+
+        $this->methods = new MethodsCollection();
     }
 
-    public static function __callStatic(string $method, array $arguments)
+    public static function make(string $path): static
     {
-        return self::make($method, ...$arguments);
+        return new static($path);
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    public function method(Method $method): static
+    {
+        $this->methods->add($method);
+
+        return $this;
+    }
+
+    public function methods(array $methods): static
+    {
+        foreach ($methods as $method) {
+            $this->methods->add($method);
+        }
+
+        return $this;
+    }
+
+    public function getMethods(): MethodsCollection
+    {
+        return $this->methods;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            ...$this->getMethods()->toArray(),
+            'summary'     => $this->getSummary(),
+            'description' => $this->getDescription(),
+            'servers'     => $this->getServers()->values()->toArray(),
+            'parameters'  => $this->getParameters()->values()->toArray(),
+            ...$this->getExtensions(),
+        ];
+    }
+
+    private function normalize(string $path): string
+    {
+        return '/'.ltrim($path, '/');
     }
 }

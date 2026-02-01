@@ -4,7 +4,7 @@ namespace AutoDocumentation\Schemas;
 
 use AutoDocumentation\Enums\Type;
 use AutoDocumentation\Properties\Property;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class ObjectSchema extends Schema
 {
@@ -12,6 +12,15 @@ class ObjectSchema extends Schema
      * @var array<Property>
      */
     private array $properties;
+
+    public function __construct(array $properties = [])
+    {
+        $this->type = Type::OBJECT;
+
+        foreach ($properties as $property) {
+            $this->add($property);
+        }
+    }
 
     /**
      * @param array<Property> $properties
@@ -23,15 +32,9 @@ class ObjectSchema extends Schema
         return new static($properties);
     }
 
-    public function __construct(array $properties = [])
-    {
-        $this->type = Type::object;
-        $this->properties = $properties;
-    }
-
     public function add(Property $property): static
     {
-        $this->properties[] = $property;
+        $this->properties[$property->getName()] = $property;
 
         return $this;
     }
@@ -43,10 +46,16 @@ class ObjectSchema extends Schema
         return $this;
     }
 
-    protected function additionalFields(): array
+    public function getProperties(): Collection
+    {
+        return collect($this->properties);
+    }
+
+    public function toArray(): array
     {
         return [
-            'properties' => Arr::collapse(array_map(fn(Property $property) => $property->resolve(), $this->properties)),
+            ...parent::toArray(),
+            'properties' => $this->getProperties()->toArray(),
         ];
     }
 }

@@ -2,45 +2,48 @@
 
 namespace AutoDocumentation;
 
-class Server
+use AutoDocumentation\Traits\HasDescription;
+use AutoDocumentation\Traits\HasExtensions;
+use AutoDocumentation\Traits\HasVariables;
+use Illuminate\Contracts\Support\Arrayable;
+
+class Server implements Arrayable
 {
-    protected array $variables = [];
+    use HasVariables;
+    use HasDescription;
+    use HasExtensions;
 
-    public static function make(string $server, string $description = ''): self
+    protected string $url;
+
+    public function __construct(string $url)
     {
-        return OpenApi::instance()->server(new self($server, $description));
+        $this->url = $url;
     }
 
-    private function __construct(
-        protected readonly string $server,
-        protected readonly string $description = ''
-    ) {
+    public static function make(string $url): static
+    {
+        return new static($url);
     }
 
-    public function variables(array $variables): self
+    public function setUrl(string $url): static
     {
-        $this->variables = $variables;
+        $this->url = $url;
 
         return $this;
     }
 
-    public function variable(string $name, string $default, array $enum = [], string $description = ''): self
+    public function getUrl(): string
     {
-        $this->variables[$name] = [
-            'default'     => $default,
-            'enum'        => $enum,
-            'description' => $description,
-        ];
-
-        return $this;
+        return $this->url;
     }
 
     public function toArray(): array
     {
         return [
-            'url'         => $this->server,
-            'description' => $this->description,
-            'variables'   => $this->variables,
+            'url'         => $this->getUrl(),
+            'description' => $this->getDescription(),
+            'variables'   => $this->getVariables()->toArray(),
+            ...$this->getExtensions(),
         ];
     }
 }

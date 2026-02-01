@@ -2,7 +2,9 @@
 
 namespace AutoDocumentation;
 
-class Group
+use Illuminate\Contracts\Support\Arrayable;
+
+class Group implements Arrayable
 {
     public function __construct(
         public readonly string $name,
@@ -10,7 +12,7 @@ class Group
     ) {
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'name' => ucfirst($this->name),

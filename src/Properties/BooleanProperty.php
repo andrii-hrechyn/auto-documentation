@@ -3,12 +3,11 @@
 namespace AutoDocumentation\Properties;
 
 use AutoDocumentation\Schemas\BooleanSchema;
-use AutoDocumentation\Schemas\Schema;
 
 class BooleanProperty extends PrimitiveProperty
 {
-    protected static function schema(): Schema
+    public static function make(string $name): static
     {
-        return BooleanSchema::make();
+        return new static($name, BooleanSchema::make());
     }
 }

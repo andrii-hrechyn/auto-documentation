@@ -2,12 +2,10 @@
 
 namespace AutoDocumentation\Properties;
 
-use AutoDocumentation\Schemas\Schema;
-
 class FileProperty extends StringProperty
 {
-    protected static function schema(): Schema
+    public static function make(string $name): static
     {
-        return parent::schema()->format('binary');
+        return parent::make($name)->format('binary');
     }
 }

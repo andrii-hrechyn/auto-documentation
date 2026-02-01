@@ -2,7 +2,6 @@
 
 namespace AutoDocumentation\Properties;
 
-use AutoDocumentation\Schemas\Schema;
 use AutoDocumentation\Schemas\StringSchema;
 
 /**
@@ -13,8 +12,8 @@ use AutoDocumentation\Schemas\StringSchema;
  */
 class StringProperty extends PrimitiveProperty
 {
-    protected static function schema(): Schema
+    public static function make(string $name): static
     {
-        return StringSchema::make();
+        return new static($name, StringSchema::make());
     }
 }

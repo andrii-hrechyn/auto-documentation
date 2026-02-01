@@ -2,149 +2,80 @@
 
 namespace AutoDocumentation;
 
-use AutoDocumentation\Components\SecuritySchemeComponent;
-use AutoDocumentation\Paths\BasePath;
-use AutoDocumentation\Traits\ComponentResolver;
+use AutoDocumentation\Components\ComponentsRegistry;
+use AutoDocumentation\Paths\Path;
+use AutoDocumentation\Paths\PathsCollection;
+use AutoDocumentation\Traits\HasExtensions;
 use AutoDocumentation\Traits\HasExternalDocs;
-use AutoDocumentation\Traits\PathResolver;
-use Illuminate\Filesystem\Filesystem;
+use AutoDocumentation\Traits\HasSecurity;
+use AutoDocumentation\Traits\HasServers;
+use AutoDocumentation\Traits\HasTags;
 
 class OpenApi
 {
-    use PathResolver;
-    use ComponentResolver;
-    use GroupsAggregator;
-    use HasExternalDocs {
-        HasExternalDocs::externalDocs as setExternalDocs;
-    }
+    use HasServers;
+    use HasExternalDocs;
+    use HasTags;
+    use HasSecurity;
+    use HasExtensions;
 
-    const OPEN_API_VERSION = '3.1.0';
-
-    private static self $instance;
-    protected Loader $loader;
-    protected Filesystem $filesystem;
+    public const OPEN_API_VERSION = '3.1.0';
 
     protected Info $info;
-    protected array $servers = [];
+    protected PathsCollection $paths;
 
-    protected array $paths = [];
-    protected array $components = [];
-    protected array $security = [];
-    /*
-     * Applied for all route marked as secure ( "secure" method in Path object without parameter )
-     */
-    protected ?SecuritySchemeComponent $defaultSecurityScheme = null;
-
-    protected array $ignoreEmptyValueFiltering = [
-        'security',
-    ];
-
-    private function __construct()
+    public function __construct()
     {
+        $this->info = Info::make(config('app.name', 'Auto Documentation'), 'v1');
+        // todo make it more dynamic
+        $this->paths = new PathsCollection();
     }
 
-    public static function instance(): self
-    {
-        if (isset(self::$instance)) {
-            return self::$instance;
-        }
-
-        return self::$instance = new self();
-    }
-
-    public function info(Info $info): Info
+    public function info(Info $info): static
     {
         $this->info = $info;
 
-        return $info;
+        return $this;
     }
 
-    public function server(Server $server): Server
+    public function getInfo(): Info
     {
-        $this->servers[] = $server;
-
-        return $server;
+        return $this->info;
     }
 
-    public function setDefaultSecurityScheme(SecuritySchemeComponent $securityScheme): self
+    public function path(Path $path): static
     {
-        $this->defaultSecurityScheme = $securityScheme;
+        $this->paths->add($path);
 
         return $this;
     }
 
-    public function setSecurity(SecuritySchemeComponent $securityScheme): self
+    public function paths(array $paths): static
     {
-        $this->security[] = $securityScheme;
+        foreach ($paths as $path) {
+            $this->path($path);
+        }
 
         return $this;
     }
 
-    public function getDefaultSecurityScheme(): ?SecuritySchemeComponent
+    public function getPaths(): PathsCollection
     {
-        return $this->defaultSecurityScheme;
+        return $this->paths;
     }
 
-    public function path(BasePath $path): BasePath
+    public function toArray(): array
     {
-        $this->paths[] = $path;
-
-        return $path;
-    }
-
-    public function generate(): array
-    {
-        return $this->filterEmptyValue([
-            'openapi'      => self::OPEN_API_VERSION,
-            'info'         => $this->info->toArray(),
-            'servers'      => $this->prepareServers($this->servers),
-            'paths'        => $this->preparePaths($this->paths),
-            'components'   => ComponentsRegistry::all(),
-            'security'     => $this->prepareSecurity($this->security),
-            'externalDocs' => $this->externalDocs?->toArray(),
-            'x-tagGroups'  => $this->groupsFromPaths($this->paths),
-        ]);
-    }
-
-    public static function defaultSecurityScheme(SecuritySchemeComponent $securitySchemeComponent): self
-    {
-        return self::instance()->setDefaultSecurityScheme($securitySchemeComponent);
-    }
-
-    public static function security(SecuritySchemeComponent $securitySchemeComponent): self
-    {
-        return self::instance()->setSecurity($securitySchemeComponent);
-    }
-
-    public static function externalDocs(ExternalDocs $externalDocs): self
-    {
-        return self::instance()->setExternalDocs($externalDocs);
-    }
-
-    private function prepareServers(array $servers): array
-    {
-        return array_map(fn(Server $server) => $server->toArray(), $servers);
-    }
-
-    private function prepareSecurity(array $securities): array
-    {
-        return array_map(fn(SecuritySchemeComponent $security) => $security->resolve(), $securities);
-    }
-
-    private function filterEmptyValue(array $array): array
-    {
-        return collect($array)
-            ->map(function ($value, string $key) {
-                if (in_array($key, $this->ignoreEmptyValueFiltering)) {
-                    return $value;
-                }
-
-                if (is_array($value)) {
-                    return empty($value) ? null : $this->filterEmptyValue($value);
-                }
-
-                return $value;
-            })
-            ->filter(fn($value) => $value)->all();
+        return [
+            'openapi'      => static::OPEN_API_VERSION,
+            'info'         => $this->getInfo()->toArray(),
+            'servers'      => $this->getServers()->values()->toArray(),
+            'security'     => $this->getSecurity()->toArray(),
+            'tags'         => $this->getTags()->toArray(),
+            'externalDocs' => $this->getExternalDocs()?->toArray(),
+            'paths'        => $this->getPaths()->toArray(),
+            'components'   => ComponentsRegistry::instance()->toArray(),
+            ...$this->getExtensions(),
+        ];
     }
 }

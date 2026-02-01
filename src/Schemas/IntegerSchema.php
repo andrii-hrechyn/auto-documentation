@@ -9,9 +9,9 @@ class IntegerSchema extends PrimitiveSchema
     protected ?int $maximum = null;
     protected ?int $minimum = null;
 
-    protected function getType(): Type
+    public function __construct()
     {
-        return Type::integer;
+        $this->type = Type::INTEGER;
     }
 
     public function maximum(int $maximum): static
@@ -21,6 +21,11 @@ class IntegerSchema extends PrimitiveSchema
         return $this;
     }
 
+    public function getMaximum(): ?int
+    {
+        return $this->maximum;
+    }
+
     public function minimum(int $minimum): static
     {
         $this->minimum = $minimum;
@@ -28,11 +33,17 @@ class IntegerSchema extends PrimitiveSchema
         return $this;
     }
 
-    protected function additionalFields(): array
+    public function getMinimum(): ?int
+    {
+        return $this->minimum;
+    }
+
+    public function toArray(): array
     {
         return [
-            'minimum' => $this->minimum,
-            'maximum' => $this->maximum,
+            ...parent::toArray(),
+            'minimum' => $this->getMinimum(),
+            'maximum' => $this->getMaximum(),
         ];
     }
 }

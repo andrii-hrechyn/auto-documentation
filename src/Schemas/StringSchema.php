@@ -9,9 +9,9 @@ class StringSchema extends PrimitiveSchema
     protected ?int $maxLength = null;
     protected ?int $minLength = null;
 
-    protected function getType(): Type
+    public function __construct()
     {
-        return Type::string;
+        $this->type = Type::STRING;
     }
 
     public function maxLength(int $maxLength): static
@@ -21,6 +21,11 @@ class StringSchema extends PrimitiveSchema
         return $this;
     }
 
+    public function getMaxLength(): ?int
+    {
+        return $this->maxLength;
+    }
+
     public function minLength(int $minLength): static
     {
         $this->minLength = $minLength;
@@ -28,11 +33,17 @@ class StringSchema extends PrimitiveSchema
         return $this;
     }
 
-    protected function additionalFields(): array
+    public function getMinLength(): ?int
+    {
+        return $this->minLength;
+    }
+
+    public function toArray(): array
     {
         return [
-            'minLength' => $this->minLength,
-            'maxLength' => $this->maxLength,
+            ...parent::toArray(),
+            'minLength' => $this->getMinLength(),
+            'maxLength' => $this->getMaxLength(),
         ];
     }
 }

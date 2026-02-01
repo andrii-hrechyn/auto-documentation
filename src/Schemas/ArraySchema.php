@@ -2,25 +2,23 @@
 
 namespace AutoDocumentation\Schemas;
 
-use AutoDocumentation\Components\SchemaComponent;
 use AutoDocumentation\Enums\Type;
-use AutoDocumentation\Helpers\SchemaHelper;
 
 class ArraySchema extends Schema
 {
-    private Schema $items;
+    private ?Schema $items;
     protected ?int $maxItems = null;
     protected ?int $minItems = null;
     protected bool $unique = false;
 
-    public static function make(Schema|SchemaComponent $items): static
+    public static function make(Schema $items): static
     {
-        return new static(SchemaHelper::prepareSchema($items));
+        return (new static($items));
     }
 
     public function __construct(Schema $items = null)
     {
-        $this->type = Type::array;
+        $this->type = Type::ARRAY;
         $this->items = $items;
     }
 
@@ -31,11 +29,21 @@ class ArraySchema extends Schema
         return $this;
     }
 
+    public function getMaxItems(): ?int
+    {
+        return $this->maxItems;
+    }
+
     public function minItems(int $minimum): static
     {
         $this->minItems = $minimum;
 
         return $this;
+    }
+
+    public function getMinItems(): ?int
+    {
+        return $this->minItems;
     }
 
     public function unique(): static
@@ -45,13 +53,34 @@ class ArraySchema extends Schema
         return $this;
     }
 
-    protected function additionalFields(): array
+    public function isUnique(): bool
+    {
+        return $this->unique;
+    }
+
+    public function getItems(): ?Schema
+    {
+        return $this->items;
+    }
+
+    public function toArray(): array
     {
         return [
-            'items'       => $this->items->resolve(),
-            'maxItems'    => $this->maxItems,
-            'minItems'    => $this->minItems,
-            'uniqueItems' => $this->unique,
+            ...parent::toArray(),
+            'maxItems'    => $this->getMaxItems(),
+            'minItems'    => $this->getMinItems(),
+            'uniqueItems' => $this->isUnique(),
+            'items'       => $this->getItems()->toArray(),
         ];
     }
+
+//    protected function additionalFields(): array
+//    {
+//        return [
+//            'items'       => $this->items->resolve(),
+//            'maxItems'    => $this->maxItems,
+//            'minItems'    => $this->minItems,
+//            'uniqueItems' => $this->unique,
+//        ];
+//    }
 }

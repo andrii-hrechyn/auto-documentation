@@ -5,21 +5,21 @@ namespace AutoDocumentation\Components;
 use AutoDocumentation\Enums\ComponentType;
 use AutoDocumentation\Responses\Response;
 
-abstract class ResponseComponent extends Component
+abstract class ResponseComponent extends SimpleComponent
 {
     public function type(): ComponentType
     {
-        return ComponentType::responses;
+        return ComponentType::RESPONSE;
     }
 
-    public function name(): string
+    public function getName(): string
     {
-        return $this->content()->statusCode;
+        return $this->content()->getName();
     }
 
-    public function resolve(): array
+    protected function response(string $statusCode): Response
     {
-        return [$this->content()->statusCode => $this->reference()->resolve()];
+        return Response::make($statusCode);
     }
 
     abstract public function content(): Response;
