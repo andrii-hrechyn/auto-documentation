@@ -169,7 +169,7 @@ protected function defaultSecuritySchema(): ?SecurityRequirement
 
 ### Tags, Extensions & Tag Groups
 
-Use `additionalOptions()` to define tags, vendor extensions, external docs, and tag groups:
+Use `additionalOptions()` to define tags, vendor extensions, and external docs:
 
 ```php
 public function additionalOptions(): void
@@ -188,14 +188,30 @@ public function additionalOptions(): void
 
     // Vendor extensions
     $this->openApi->extension('x-api-id', 'my-api');
-
-    // Tag groups (Redoc x-tagGroups extension)
-    $this->openApi->extension('x-tagGroups', [
-        new Group('Content', ['Posts', 'Comments']),
-        new Group('Access', ['Users', 'Auth']),
-    ]);
 }
 ```
+
+### Groups
+
+Groups organize tags into sections (rendered as `x-tagGroups` in the spec, supported by Redoc). Instead of defining groups manually, set a group on each path — tags are collected and grouped automatically:
+
+```php
+class PostsPath extends PathComponent
+{
+    public function path(): Path
+    {
+        return $this->make('posts')
+            ->group('Content');  // all tags from this path go into the "Content" group
+    }
+
+    public function get(Method $method): Method
+    {
+        return $method->tag('Posts')->summary('List posts');
+    }
+}
+```
+
+Paths sharing the same group name have their tags merged into a single `x-tagGroups` entry.
 
 ## Paths
 

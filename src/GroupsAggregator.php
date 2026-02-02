@@ -13,6 +13,10 @@ trait GroupsAggregator
 
         /** @var Path $path */
         foreach ($paths as $path) {
+            if ($path->getGroup() === null) {
+                continue;
+            }
+
             $groups[$path->getGroup()][] = $path->getTags();
         }
 

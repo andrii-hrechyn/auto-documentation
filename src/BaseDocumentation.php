@@ -9,6 +9,8 @@ use ReflectionClass;
 
 abstract class BaseDocumentation
 {
+    use GroupsAggregator;
+
     protected OpenApi $openApi;
     protected array $paths = [];
 
@@ -120,13 +122,23 @@ abstract class BaseDocumentation
 
         $this->loadPaths('');
 
-        collect($this->paths)->each(function (PathComponent $path) {
+        $resolvedPaths = [];
+
+        collect($this->paths)->each(function (PathComponent $path) use (&$resolvedPaths) {
             $openApiPath = $path->path();
 
             $this->openApi->path($openApiPath);
 
             $openApiPath->methods($path->methods());
+
+            $resolvedPaths[] = $openApiPath;
         });
+
+        $groups = $this->groupsFromPaths($resolvedPaths);
+
+        if (!empty($groups)) {
+            $this->openApi->extension('x-tagGroups', $groups);
+        }
 
         return $this->openApi;
     }

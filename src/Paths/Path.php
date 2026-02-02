@@ -19,6 +19,8 @@ class Path implements Arrayable
 
     protected string $path;
 
+    protected ?string $group = null;
+
     protected MethodsCollection $methods;
 
     public function __construct(string $path)
@@ -52,6 +54,27 @@ class Path implements Arrayable
         }
 
         return $this;
+    }
+
+    public function group(string $group): static
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    public function getGroup(): ?string
+    {
+        return $this->group;
+    }
+
+    public function getTags(): array
+    {
+        return $this->methods->all()
+            ->flatMap(fn (Method $method) => $method->getTags()->map(fn (\AutoDocumentation\Tag $tag) => $tag->getName()))
+            ->unique()
+            ->values()
+            ->all();
     }
 
     public function getMethods(): MethodsCollection

@@ -20,6 +20,11 @@ class MethodsCollection
         return $this;
     }
 
+    public function all(): Collection
+    {
+        return $this->methods;
+    }
+
     public function toArray(): array
     {
         return $this->methods->toArray();
